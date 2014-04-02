@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ESTransponder.h"
 
 @interface ESAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) ESTransponder *transponder;
 
 @end

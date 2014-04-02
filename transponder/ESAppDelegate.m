@@ -12,7 +12,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    self.transponder = [[ESTransponder alloc] init];
+    // Set the earshot id
+    [self.transponder setEarshotID:@"alonso-set-this-id"];
+    [self.transponder startDetecting];
+    [self.transponder startBroadcasting];
+    
     return YES;
 }
 							
@@ -36,6 +41,8 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    NSLog(@"Coming up!");
+    [self.transponder chirpBeacon];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

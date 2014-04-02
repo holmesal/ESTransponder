@@ -21,6 +21,13 @@
 		C0ACBCE318EB6C7200BBFCDF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0ACBCC518EB6C7200BBFCDF /* UIKit.framework */; };
 		C0ACBCEB18EB6C7200BBFCDF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C0ACBCE918EB6C7200BBFCDF /* InfoPlist.strings */; };
 		C0ACBCED18EB6C7200BBFCDF /* transponderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0ACBCEC18EB6C7200BBFCDF /* transponderTests.m */; };
+		C0ACBCF818EB6C8000BBFCDF /* ESTransponder.m in Sources */ = {isa = PBXBuildFile; fileRef = C0ACBCF718EB6C8000BBFCDF /* ESTransponder.m */; };
+		C0ACBCFC18EB70E000BBFCDF /* CBCentralManager+Ext.m in Sources */ = {isa = PBXBuildFile; fileRef = C0ACBCFB18EB70E000BBFCDF /* CBCentralManager+Ext.m */; };
+		C0ACBCFF18EB710C00BBFCDF /* CBUUID+Ext.m in Sources */ = {isa = PBXBuildFile; fileRef = C0ACBCFE18EB710C00BBFCDF /* CBUUID+Ext.m */; };
+		C0ACBD0218EB72BC00BBFCDF /* CBPeripheralManager+Ext.m in Sources */ = {isa = PBXBuildFile; fileRef = C0ACBD0118EB72BC00BBFCDF /* CBPeripheralManager+Ext.m */; };
+		C0ACBD0418EB758800BBFCDF /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0ACBD0318EB758800BBFCDF /* CoreBluetooth.framework */; };
+		C0ACBD0618EBA6FC00BBFCDF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0ACBD0518EBA6FC00BBFCDF /* CoreLocation.framework */; };
+		C0ACBD0918EBAAE900BBFCDF /* ESBeacon.m in Sources */ = {isa = PBXBuildFile; fileRef = C0ACBD0818EBAAE900BBFCDF /* ESBeacon.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +60,18 @@
 		C0ACBCE818EB6C7200BBFCDF /* transponderTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "transponderTests-Info.plist"; sourceTree = "<group>"; };
 		C0ACBCEA18EB6C7200BBFCDF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C0ACBCEC18EB6C7200BBFCDF /* transponderTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = transponderTests.m; sourceTree = "<group>"; };
+		C0ACBCF618EB6C8000BBFCDF /* ESTransponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESTransponder.h; path = ../ESTransponder.h; sourceTree = "<group>"; };
+		C0ACBCF718EB6C8000BBFCDF /* ESTransponder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESTransponder.m; path = ../ESTransponder.m; sourceTree = "<group>"; };
+		C0ACBCFA18EB70E000BBFCDF /* CBCentralManager+Ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CBCentralManager+Ext.h"; sourceTree = "<group>"; };
+		C0ACBCFB18EB70E000BBFCDF /* CBCentralManager+Ext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBCentralManager+Ext.m"; sourceTree = "<group>"; };
+		C0ACBCFD18EB710C00BBFCDF /* CBUUID+Ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CBUUID+Ext.h"; sourceTree = "<group>"; };
+		C0ACBCFE18EB710C00BBFCDF /* CBUUID+Ext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBUUID+Ext.m"; sourceTree = "<group>"; };
+		C0ACBD0018EB72BC00BBFCDF /* CBPeripheralManager+Ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CBPeripheralManager+Ext.h"; sourceTree = "<group>"; };
+		C0ACBD0118EB72BC00BBFCDF /* CBPeripheralManager+Ext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBPeripheralManager+Ext.m"; sourceTree = "<group>"; };
+		C0ACBD0318EB758800BBFCDF /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		C0ACBD0518EBA6FC00BBFCDF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		C0ACBD0718EBAAE900BBFCDF /* ESBeacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESBeacon.h; sourceTree = "<group>"; };
+		C0ACBD0818EBAAE900BBFCDF /* ESBeacon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESBeacon.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +79,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0ACBD0618EBA6FC00BBFCDF /* CoreLocation.framework in Frameworks */,
+				C0ACBD0418EB758800BBFCDF /* CoreBluetooth.framework in Frameworks */,
 				C0ACBCC418EB6C7200BBFCDF /* CoreGraphics.framework in Frameworks */,
 				C0ACBCC618EB6C7200BBFCDF /* UIKit.framework in Frameworks */,
 				C0ACBCC218EB6C7200BBFCDF /* Foundation.framework in Frameworks */,
@@ -101,6 +122,8 @@
 		C0ACBCC018EB6C7200BBFCDF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C0ACBD0518EBA6FC00BBFCDF /* CoreLocation.framework */,
+				C0ACBD0318EB758800BBFCDF /* CoreBluetooth.framework */,
 				C0ACBCC118EB6C7200BBFCDF /* Foundation.framework */,
 				C0ACBCC318EB6C7200BBFCDF /* CoreGraphics.framework */,
 				C0ACBCC518EB6C7200BBFCDF /* UIKit.framework */,
@@ -112,6 +135,11 @@
 		C0ACBCC718EB6C7200BBFCDF /* transponder */ = {
 			isa = PBXGroup;
 			children = (
+				C0ACBCF918EB70CC00BBFCDF /* Extension */,
+				C0ACBCF618EB6C8000BBFCDF /* ESTransponder.h */,
+				C0ACBCF718EB6C8000BBFCDF /* ESTransponder.m */,
+				C0ACBD0718EBAAE900BBFCDF /* ESBeacon.h */,
+				C0ACBD0818EBAAE900BBFCDF /* ESBeacon.m */,
 				C0ACBCD018EB6C7200BBFCDF /* ESAppDelegate.h */,
 				C0ACBCD118EB6C7200BBFCDF /* ESAppDelegate.m */,
 				C0ACBCD318EB6C7200BBFCDF /* Main.storyboard */,
@@ -150,6 +178,19 @@
 				C0ACBCE918EB6C7200BBFCDF /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C0ACBCF918EB70CC00BBFCDF /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				C0ACBCFD18EB710C00BBFCDF /* CBUUID+Ext.h */,
+				C0ACBCFE18EB710C00BBFCDF /* CBUUID+Ext.m */,
+				C0ACBCFA18EB70E000BBFCDF /* CBCentralManager+Ext.h */,
+				C0ACBCFB18EB70E000BBFCDF /* CBCentralManager+Ext.m */,
+				C0ACBD0018EB72BC00BBFCDF /* CBPeripheralManager+Ext.h */,
+				C0ACBD0118EB72BC00BBFCDF /* CBPeripheralManager+Ext.m */,
+			);
+			name = Extension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -200,6 +241,13 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = mtnlab;
 				TargetAttributes = {
+					C0ACBCBD18EB6C7200BBFCDF = {
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
 					C0ACBCDE18EB6C7200BBFCDF = {
 						TestTargetID = C0ACBCBD18EB6C7200BBFCDF;
 					};
@@ -250,8 +298,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0ACBD0218EB72BC00BBFCDF /* CBPeripheralManager+Ext.m in Sources */,
 				C0ACBCD818EB6C7200BBFCDF /* ESViewController.m in Sources */,
+				C0ACBCFF18EB710C00BBFCDF /* CBUUID+Ext.m in Sources */,
+				C0ACBCFC18EB70E000BBFCDF /* CBCentralManager+Ext.m in Sources */,
 				C0ACBCD218EB6C7200BBFCDF /* ESAppDelegate.m in Sources */,
+				C0ACBD0918EBAAE900BBFCDF /* ESBeacon.m in Sources */,
+				C0ACBCF818EB6C8000BBFCDF /* ESTransponder.m in Sources */,
 				C0ACBCCE18EB6C7200BBFCDF /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
