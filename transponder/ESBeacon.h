@@ -10,4 +10,6 @@
 
 @interface ESBeacon : NSObject
 
+#define EARSHOT_UUID @"BC43DDCC-AF0C-4A69-9E75-4CDFF8FD5F63"
+
 @end

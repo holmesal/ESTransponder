@@ -14,7 +14,8 @@
 {
     self.transponder = [[ESTransponder alloc] init];
     // Set the earshot id
-    [self.transponder setEarshotID:@"alonso-set-this-id"];
+//    [self.transponder setEarshotID:@"alonso-set-this-id"];
+    self.transponder.earshotID = @"alonso-set-this-id";
     [self.transponder startDetecting];
     [self.transponder startBroadcasting];
     

@@ -8,23 +8,36 @@
 
 #import "ESTransponder.h"
 #import <CoreBluetooth/CoreBluetooth.h>
-#import "ESBeacon.h"
+#import <CoreLocation/CoreLocation.h>
+//#import "ESBeacon.h"
 
 // Extensions
 #import "CBCentralManager+Ext.h"
 #import "CBPeripheralManager+Ext.h"
 #import "CBUUID+Ext.h"
 
-#define DEBUG_CENTRAL NO
-#define DEBUG_PERIPHERAL YES
+#define DEBUG_CENTRAL YES
+#define DEBUG_PERIPHERAL NO
 #define DEBUG_BEACON YES
 
-@interface ESTransponder() <CBPeripheralManagerDelegate, CBCentralManagerDelegate>
+@interface ESTransponder() <CBPeripheralManagerDelegate, CBCentralManagerDelegate, CLLocationManagerDelegate>
+// Bluetooth / main class stuff
 @property (strong, nonatomic) CBUUID *identifier;
 @property (strong, nonatomic) CBCentralManager *centralManager;
 @property (strong, nonatomic) CBPeripheralManager *peripheralManager;
 @property (strong, nonatomic) NSMutableDictionary *earshotUsers;
 @property (strong, nonatomic) NSNotificationCenter *note;
+@property (strong, nonatomic) NSDictionary *bluetoothAdvertisingData;
+
+// Beacon broadcasting
+@property NSInteger flipCount;
+@property BOOL isAdvertisingAsBeacon;
+@property (strong, nonatomic) CLBeaconRegion *beaconBroadcastRegion;
+
+// Beacon monitoring
+@property (strong, nonatomic) CLLocationManager *locationManager;
+
+
 
 //@property (strong, nonatomic)
 
@@ -38,6 +51,10 @@
     if ((self = [super init])) {
         self.identifier = [CBUUID UUIDWithString:IDENTIFIER_STRING];
         self.earshotUsers = [[NSMutableDictionary alloc] init];
+        // Start off NOT flipping between beacons/bluetooth
+        self.isAdvertisingAsBeacon = NO;
+        // Setup beacon monitoring for regions
+        [self setupBeaconRegions];
     }
     return self;
 }
@@ -97,10 +114,10 @@
 - (void)startAdvertising
 {
     
-    NSDictionary *advertisingData = @{CBAdvertisementDataServiceUUIDsKey:@[self.identifier], CBAdvertisementDataLocalNameKey:self.earshotID};
+    self.bluetoothAdvertisingData = @{CBAdvertisementDataServiceUUIDsKey:@[self.identifier], CBAdvertisementDataLocalNameKey:self.earshotID};
     
     // Start advertising over BLE
-    [self.peripheralManager startAdvertising:advertisingData];
+    [self.peripheralManager startAdvertising:self.bluetoothAdvertisingData];
 }
 
 
@@ -184,24 +201,147 @@
 
 
 
-#pragma mark - iBeacon
+#pragma mark - iBeacon broadcasting
 // Below lie the functions for interacting with iBeacon
 - (void)chirpBeacon
 {
-    if (DEBUG_BEACON) {
-        NSLog(@"Chirping beacon!");
+    
+    NSLog(@"Creating new beacon!");
+    
+    // Find an available uuid - hardcoded for now
+    self.beaconBroadcastRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
+                                                                major:0
+                                                                minor:0
+                                                           identifier:@"Earshot Region"];
+    
+    // Create a new ESBeacon and chirp that shit
+//    self.beacon = [[ESBeacon alloc] init];
+    
+    // Reset the flip count
+    self.flipCount = 0;
+    // Flip!
+    [self flipState];
+
+}
+
+- (void)flipState
+{
+    // Do whatever you're not doing right now
+    self.isAdvertisingAsBeacon = !self.isAdvertisingAsBeacon;
+    NSLog(@"Advertising as beacon? %@",self.isAdvertisingAsBeacon ? @"true" : @"false");
+    // Do whatever that is
+    if (self.isAdvertisingAsBeacon){
+        [self startBeacon];
+    } else{
+        [self resetBluetooth];
+    }
+    NSLog(@"Flipping!");
+    // Maximum number of flips
+    NSInteger maxFlips = 10;
+    // Set timeout if flip state < maxflips
+    if(self.flipCount < maxFlips)
+    {
+        self.flipCount++;
+        // Change the advertising method, so the next wakeup has it
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW,  1000* NSEC_PER_MSEC), dispatch_get_main_queue(),                ^{
+            [self flipState];
+        });
+
+    } else
+    {
+        [self resetBluetooth];
     }
     
-    // Find the first available region - hardcode for now
-    self.beaconUUID = [[NSUUID alloc] initWithUUIDString: @"BC43DDCC-AF0C-4A69-9E75-4CDFF8FD5F63"];
-    self.beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:self.beaconUUID major:1 minor:1 identifier:@"Region 1"];
+}
+
+- (void)resetBluetooth
+{
+    if (DEBUG_BEACON)
+        NSLog(@"-- resetting to broadcast as bluetooth");
+    // Stop what you're doing and advertise with bluetooth
+    [self.peripheralManager stopAdvertising];
+    [self.peripheralManager startAdvertising:self.bluetoothAdvertisingData];
+}
+
+- (void)startBeacon
+{
+    if (DEBUG_BEACON)
+        NSLog(@"-- starting to broadcast as beacon");
+    // Stop what you're doing and advertise as a beacon
+    [self.peripheralManager stopAdvertising];
+    // Broadcast
+    NSDictionary *beaconData = [self.beaconBroadcastRegion peripheralDataWithMeasuredPower:nil];
+    [self.peripheralManager startAdvertising:beaconData];
+}
+
+
+# pragma mark - iBeacon discovery
+// Starts monitoring regions for minors 0-19
+- (void)setupBeaconRegions
+{
+    // Make the location manager
+    self.locationManager = [[CLLocationManager alloc] init];
+    // Set the delegate
+    self.locationManager.delegate = self;
     
-    // Broadcast for like 3 seconds
-    NSDictionary *beaconData = [self.beaconRegion peripheralDataWithMeasuredPower:nil];
-    [self.beaconManager startAdvertising:beaconData];
+    // Create a region with this minor
+    CLBeaconRegion *region = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
+                                                                     major:0
+                                                                     minor:0
+                                                                identifier:@"Earshot Region"];
+    // Wake up the app when you enter this region
+    region.notifyEntryStateOnDisplay = YES;
+    // Start monitoring via location manager
+    [self.locationManager startMonitoringForRegion:region];
+    // OPTIONAL - if we need to initialize this region with an inside/outside state, do it here
+    [self.locationManager requestStateForRegion:region];
+}
+
+#pragma mark - CLLocationManagerDelegate
+
+//- (void)locationManager:(CLLocationManager *)manager
+//	  didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
+//{
+//    NSLog(@"State is %ld for region %@", state, region);
+//    if (state == CLRegionStateInside)
+//    {
+//        if (DEBUG_BEACON)
+//            NSLog(@"-- Entered beacon region: %@", region);
+//        
+//        UILocalNotification *notice = [[UILocalNotification alloc] init];
+//    
+//        notice.alertBody = @"Entered region!";
+//        notice.alertAction = @"Open";
+//    
+//        [[UIApplication sharedApplication] scheduleLocalNotification:notice];
+//    }
+//
+//}
+
+- (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
+{
+    if (DEBUG_BEACON)
+        NSLog(@"+++ Entered beacon region: %@", region);
     
-    // Do we have to turn on here first?
+    UILocalNotification *notice = [[UILocalNotification alloc] init];
     
+    notice.alertBody = @"Entered region!";
+    notice.alertAction = @"Open";
+    
+    [[UIApplication sharedApplication] scheduleLocalNotification:notice];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
+{
+    if (DEBUG_BEACON)
+        NSLog(@"--- Exited beacon region: %@", region);
+    
+    UILocalNotification *notice = [[UILocalNotification alloc] init];
+    
+    notice.alertBody = @"Exited region!";
+    notice.alertAction = @"Open";
+    
+    [[UIApplication sharedApplication] scheduleLocalNotification:notice];
 }
 
 

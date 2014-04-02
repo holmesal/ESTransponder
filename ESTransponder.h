@@ -13,6 +13,7 @@
 // TODO - make this a singleton
 //#define SINGLETON_IDENTIFIER @"CB284D88-5317-4FB4-9621-C5A3A49E6155"
 #define IDENTIFIER_STRING @"CB284D88-5317-4FB4-9621-C5A3A49E6155"
+#define IBEACON_UUID @"BC43DDCC-AF0C-4A69-9E75-4CDFF8FD5F63"
 
 @property (strong, nonatomic) NSString *earshotID;
 @property (nonatomic, readonly) BOOL isDetecting;
