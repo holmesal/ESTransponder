@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C02EBAB218ED4CD6004D93F6 /* ESTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C02EBAB118ED4CD6004D93F6 /* ESTableViewController.m */; };
 		C0ACBCC218EB6C7200BBFCDF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0ACBCC118EB6C7200BBFCDF /* Foundation.framework */; };
 		C0ACBCC418EB6C7200BBFCDF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0ACBCC318EB6C7200BBFCDF /* CoreGraphics.framework */; };
 		C0ACBCC618EB6C7200BBFCDF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0ACBCC518EB6C7200BBFCDF /* UIKit.framework */; };
@@ -41,6 +42,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C02EBAB018ED4CD6004D93F6 /* ESTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESTableViewController.h; sourceTree = "<group>"; };
+		C02EBAB118ED4CD6004D93F6 /* ESTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESTableViewController.m; sourceTree = "<group>"; };
 		C0ACBCBE18EB6C7200BBFCDF /* transponder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = transponder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0ACBCC118EB6C7200BBFCDF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C0ACBCC318EB6C7200BBFCDF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -143,6 +146,8 @@
 				C0ACBCD018EB6C7200BBFCDF /* ESAppDelegate.h */,
 				C0ACBCD118EB6C7200BBFCDF /* ESAppDelegate.m */,
 				C0ACBCD318EB6C7200BBFCDF /* Main.storyboard */,
+				C02EBAB018ED4CD6004D93F6 /* ESTableViewController.h */,
+				C02EBAB118ED4CD6004D93F6 /* ESTableViewController.m */,
 				C0ACBCD618EB6C7200BBFCDF /* ESViewController.h */,
 				C0ACBCD718EB6C7200BBFCDF /* ESViewController.m */,
 				C0ACBCD918EB6C7200BBFCDF /* Images.xcassets */,
@@ -302,6 +307,7 @@
 				C0ACBCD818EB6C7200BBFCDF /* ESViewController.m in Sources */,
 				C0ACBCFF18EB710C00BBFCDF /* CBUUID+Ext.m in Sources */,
 				C0ACBCFC18EB70E000BBFCDF /* CBCentralManager+Ext.m in Sources */,
+				C02EBAB218ED4CD6004D93F6 /* ESTableViewController.m in Sources */,
 				C0ACBCD218EB6C7200BBFCDF /* ESAppDelegate.m in Sources */,
 				C0ACBD0918EBAAE900BBFCDF /* ESBeacon.m in Sources */,
 				C0ACBCF818EB6C8000BBFCDF /* ESTransponder.m in Sources */,
@@ -510,6 +516,7 @@
 				C0ACBCF218EB6C7200BBFCDF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C0ACBCF318EB6C7200BBFCDF /* Build configuration list for PBXNativeTarget "transponderTests" */ = {
 			isa = XCConfigurationList;
@@ -518,6 +525,7 @@
 				C0ACBCF518EB6C7200BBFCDF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
