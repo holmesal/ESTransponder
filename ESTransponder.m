@@ -20,6 +20,8 @@
 #define DEBUG_BEACON YES
 #define DEBUG_USERS NO
 
+#define NUM_BEACONS 20
+
 @interface ESTransponder() <CBPeripheralManagerDelegate, CBCentralManagerDelegate, CLLocationManagerDelegate>
 // Bluetooth / main class stuff
 @property (strong, nonatomic) CBUUID *identifier;
@@ -50,6 +52,10 @@
         // Start off NOT flipping between beacons/bluetooth
         self.isAdvertisingAsBeacon = NO;
         // Setup beacon monitoring for regions
+        
+        
+        
+//        [self performSelector:@selector(setupBeaconRegions) withObject:nil afterDelay:5];
         [self setupBeaconRegions];
     }
     return self;
@@ -221,22 +227,40 @@
 - (void)chirpBeacon
 {
     
-    NSLog(@"Creating new beacon!");
+    NSLog(@"Attempting to create new beacon!");
     
-    // Find an available uuid - hardcoded for now
-    self.beaconBroadcastRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
-                                                                major:0
-                                                                minor:19
-                                                           identifier:@"Earshot Region"];
+    // Find an available uuid
+    bool found = NO;
+    NSNumber *availableRegion = 0;
+    for (int minor=0; minor<NUM_BEACONS; minor++) {
+        if (![[self.regions objectAtIndex:minor] boolValue]) {
+            NSLog(@"Region %i will have to do.",minor);
+            availableRegion = [NSNumber numberWithInt:minor];
+            found = YES;
+            break;
+        } else {
+            NSLog(@"Region %i is in use.",minor);
+        }
+    }
     
-    // Create a new ESBeacon and chirp that shit
-//    self.beacon = [[ESBeacon alloc] init];
-    
-    // Reset the flip count
-    self.flipCount = 0;
-    // Flip!
-    [self flipState];
-
+    // Was anything found?
+    if (found) {
+        NSLog(@"Creating a new beacon broadcast region in slot number %@",availableRegion);
+        self.beaconBroadcastRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
+                                                                             major:0
+                                                                             minor:16
+                                                                        identifier:@"Earshot Region"];
+        // Reset the flip count
+        self.flipCount = 0;
+        // Flip!
+        [self flipState];
+    } else{
+        int timeoutSeconds = 10;
+        NSLog(@"Couldn't find an open region, trying again in %i seconds.",timeoutSeconds);
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW,  timeoutSeconds*1000* NSEC_PER_MSEC), dispatch_get_main_queue(),                ^{
+            [self chirpBeacon];
+        });
+    }
 }
 
 - (void)flipState
@@ -275,6 +299,7 @@
         NSLog(@"-- resetting to broadcast as bluetooth");
     // Stop what you're doing and advertise with bluetooth
     [self.peripheralManager stopAdvertising];
+    self.isAdvertisingAsBeacon = NO;
     [self.peripheralManager startAdvertising:self.bluetoothAdvertisingData];
 }
 
@@ -291,9 +316,10 @@
 
 
 # pragma mark - iBeacon discovery
-// Starts monitoring regions for minors 0-19
+// Starts monitoring regions for minors 0-NUM_BEACONS
 - (void)setupBeaconRegions
 {
+    NSLog(@"Setting up beacon regions...");
     // Make the location manager
     self.locationManager = [[CLLocationManager alloc] init];
     // Set the delegate
@@ -302,7 +328,8 @@
     self.regions = [[NSMutableArray alloc] init];
     
     // Loop through the minors 1-20, and set up a region for each one
-    for (int minor=0; minor<20; minor++) {
+    for (int minor=0; minor<NUM_BEACONS; minor++) {
+        NSLog(@"Starting to monitor for region %i",minor);
         // Start outside the region
         [self.regions addObject:@NO];
         // Create a region with this minor
@@ -312,71 +339,30 @@
                                                                     identifier:@"Earshot Region"];
         // Wake up the app when you enter this region
         region.notifyEntryStateOnDisplay = YES;
+        region.notifyOnEntry = YES;
+        region.notifyOnExit = YES;
         // Start monitoring via location manager
         [self.locationManager startMonitoringForRegion:region];
         // OPTIONAL - if we need to initialize this region with an inside/outside state, do it here
+//        [self.locationManager performSelector:@selector(requestStateForRegion:) withObject:region afterDelay:5];
         [self.locationManager requestStateForRegion:region];
     }
+    
     
 }
 
 #pragma mark - CLLocationManagerDelegate
 
-//- (void)locationManager:(CLLocationManager *)manager
-//	  didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
-//{
-//    NSLog(@"State is %ld for region %@", state, region);
-//    if (state == CLRegionStateInside)
-//    {
-//        if (DEBUG_BEACON)
-//            NSLog(@"-- Entered beacon region: %@", region);
-//        
-//        UILocalNotification *notice = [[UILocalNotification alloc] init];
-//    
-//        notice.alertBody = @"Entered region!";
-//        notice.alertAction = @"Open";
-//    
-//        [[UIApplication sharedApplication] scheduleLocalNotification:notice];
-//    }
-//
-//}
-
-//- (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
-//{
-//    // Set the region as inside
-//    NSNumber *minor = [region valueForKey:@"minor"];
-//    [self.regions replaceObjectAtIndex:[minor intValue] withObject:@YES];
-//    
-//    if (DEBUG_BEACON){
-//        NSLog(@"+++ Entered beacon region: %@", region);
-//        NSLog(@"%@",self.regions);
-//    }
-//    
-//    
-//}
-
-//- (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
-//{
-//    // Set the region as outside
-//    
-//    
-//    if (DEBUG_BEACON){
-//        NSLog(@"--- Exited beacon region: %@", region);
-//        NSLog(@"%@",self.regions);
-//    }
-//    
-//    UILocalNotification *notice = [[UILocalNotification alloc] init];
-//    
-//    notice.alertBody = @"Exited region!";
-//    notice.alertAction = @"Open";
-//    
-//    [[UIApplication sharedApplication] scheduleLocalNotification:notice];
-//}
+- (void) locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
+{
+    NSLog(@"Did enter region! %@",region);
+}
 
 - (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
 {
     // What region?
     NSNumber *minor = [region valueForKey:@"minor"];
+//    NSLog(@"Got state %@ for region %@ : %@",state,minor,region);
     switch (state) {
         case CLRegionStateInside:
             [self.regions replaceObjectAtIndex:[minor intValue] withObject:@YES];
