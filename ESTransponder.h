@@ -16,6 +16,7 @@
 #define IBEACON_UUID @"BC43DDCC-AF0C-4A69-9E75-4CDFF8FD5F63"
 
 @property (strong, nonatomic) NSString *earshotID;
+@property (strong, nonatomic) NSMutableDictionary *earshotUsers;
 @property (nonatomic, readonly) BOOL isDetecting;
 @property (nonatomic, readonly) BOOL isBroadcasting;
 
@@ -31,6 +32,12 @@
 
 // Chirp the iBeacon for a few seconds to wake up others
 - (void)chirpBeacon;
+
+// If you're doing bluetooth stuff, stop it. Just stop.
+- (void)resetBluetooth;
+
+// Gets an array of earshot ids, one for each user currently in-range
+- (NSArray *)getUsersInRange;
 
 // Events API
 /*

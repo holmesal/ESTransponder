@@ -15,7 +15,7 @@
     self.transponder = [[ESTransponder alloc] init];
     // Set the earshot id
 //    [self.transponder setEarshotID:@"alonso-set-this-id"];
-    self.transponder.earshotID = @"alonso-set-this-id";
+    self.transponder.earshotID = [[UIDevice currentDevice] name];
     [self.transponder startDetecting];
     [self.transponder startBroadcasting];
     
@@ -26,6 +26,7 @@
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    [self.transponder resetBluetooth];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -42,7 +43,6 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    NSLog(@"Coming up!");
     [self.transponder chirpBeacon];
 }
 
