@@ -248,8 +248,8 @@
         NSLog(@"Creating a new beacon broadcast region in slot number %@",availableRegion);
         self.beaconBroadcastRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
                                                                              major:0
-                                                                             minor:16
-                                                                        identifier:@"Earshot Region"];
+                                                                             minor:[availableRegion intValue]
+                                                                        identifier:[NSString stringWithFormat:@"Broadcast region %@",availableRegion]];
         // Reset the flip count
         self.flipCount = 0;
         // Flip!
@@ -261,6 +261,15 @@
             [self chirpBeacon];
         });
     }
+//    
+//    self.beaconBroadcastRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
+//                                                                         major:0
+//                                                                         minor:13
+//                                                                    identifier:@"Earshot Broadcast Region"];
+//    // Reset the flip count
+//    self.flipCount = 0;
+//    // Flip!
+//    [self flipState];
 }
 
 - (void)flipState
@@ -327,6 +336,19 @@
     // Init the region tracker
     self.regions = [[NSMutableArray alloc] init];
     
+//    CLBeaconRegion *region = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
+//                                                                     major:0
+//                                                                     minor:13
+//                                                                identifier:@"Earshot Region"];
+//    // Wake up the app when you enter this region
+//    region.notifyEntryStateOnDisplay = YES;
+//    region.notifyOnEntry = YES;
+//    region.notifyOnExit = YES;
+//    // Start monitoring via location manager
+//    [self.locationManager startMonitoringForRegion:region];
+//    // OPTIONAL - if we need to initialize this region with an inside/outside state, do it here
+//    [self.locationManager requestStateForRegion:region];
+    
     // Loop through the minors 1-20, and set up a region for each one
     for (int minor=0; minor<NUM_BEACONS; minor++) {
         NSLog(@"Starting to monitor for region %i",minor);
@@ -336,7 +358,7 @@
         CLBeaconRegion *region = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
                                                                          major:0
                                                                          minor:minor
-                                                                    identifier:@"Earshot Region"];
+                                                                    identifier:[NSString stringWithFormat:@"Listen region %d",minor]];
         // Wake up the app when you enter this region
         region.notifyEntryStateOnDisplay = YES;
         region.notifyOnEntry = YES;
@@ -353,16 +375,11 @@
 
 #pragma mark - CLLocationManagerDelegate
 
-- (void) locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
-{
-    NSLog(@"Did enter region! %@",region);
-}
-
 - (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
 {
     // What region?
     NSNumber *minor = [region valueForKey:@"minor"];
-//    NSLog(@"Got state %@ for region %@ : %@",state,minor,region);
+//    NSLog(@"Got state %li for region %@ : %@",state,minor,region);
     switch (state) {
         case CLRegionStateInside:
             [self.regions replaceObjectAtIndex:[minor intValue] withObject:@YES];
@@ -376,15 +393,15 @@
             }
             break;
         case CLRegionStateOutside:
+            [self.regions replaceObjectAtIndex:[minor intValue] withObject:@NO];
             if (DEBUG_BEACON){
                 NSLog(@"--- Exited region: %@", region);
-                UILocalNotification *notice = [[UILocalNotification alloc] init];
-                notice.alertBody = [NSString stringWithFormat:@"Exited region %@",minor];
-                notice.alertAction = @"Open";
-                [[UIApplication sharedApplication] scheduleLocalNotification:notice];
+//                UILocalNotification *notice = [[UILocalNotification alloc] init];
+//                notice.alertBody = [NSString stringWithFormat:@"Exited region %@",minor];
+//                notice.alertAction = @"Open";
+//                [[UIApplication sharedApplication] scheduleLocalNotification:notice];
                 NSLog(@"%@",self.regions);
             }
-            [self.regions replaceObjectAtIndex:[minor intValue] withObject:@NO];
             break;
         case CLRegionStateUnknown:
             NSLog(@"Region %@ in unknown state - doing nothing...",minor);
