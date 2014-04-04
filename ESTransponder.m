@@ -9,6 +9,7 @@
 #import "ESTransponder.h"
 #import <CoreBluetooth/CoreBluetooth.h>
 #import <CoreLocation/CoreLocation.h>
+#import <Firebase/Firebase.h>
 
 // Extensions
 #import "CBCentralManager+Ext.h"
@@ -18,7 +19,7 @@
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
 #define DEBUG_BEACON NO
-#define DEBUG_USERS NO
+#define DEBUG_USERS YES
 
 #define NUM_BEACONS 20
 
@@ -38,6 +39,11 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) NSMutableArray *regions;
 
+// Firebase-synced users array
+@property (strong, nonatomic) Firebase *rootRef;
+@property (strong, nonatomic) Firebase *firebaseUsersRef;
+@property (strong, nonatomic) NSMutableDictionary *firebaseUsers;
+
 @end
 
 @implementation ESTransponder
@@ -54,6 +60,7 @@
         [self setupBeaconRegions];
         // Start a repeating timer to prune the in-range users, every 10 seconds
         [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(pruneUsers) userInfo:nil repeats:YES];
+        
     }
     return self;
 }
@@ -61,8 +68,11 @@
 - (void)setEarshotID:(NSString *)earshitId
 {
     earshotID = earshitId;
+    // Set up firebase
+    [self initFirebase];
 }
 
+# pragma mark - user management
 - (NSArray *)getUsersInRange
 {
     NSMutableArray *usersInRange = [[NSMutableArray alloc] init];
@@ -102,6 +112,9 @@
         // If it's longer than 20 seconds, they're probs gone
         if (lastSeen > 20.0) {
             if (DEBUG_USERS) NSLog(@"Removing user: %@",userBeacon);
+            // Remove from firebaseUsers
+            [self removeLostUserFromFirebase:[[self.earshotUsers objectForKey:userBeaconKey] objectForKey:@"earshotID"]];
+            // Remove from bluetooth users
             [self.earshotUsers removeObjectForKey:userBeaconKey];
         } else {
             if (DEBUG_USERS) NSLog(@"Not removing user: %@",userBeacon);
@@ -110,6 +123,59 @@
     // Update the users in range
     [self getUsersInRange];
     
+}
+
+- (void)initFirebase
+{
+    self.firebaseUsers = [[NSMutableDictionary alloc] init];
+    self.rootRef = [[Firebase alloc] initWithUrl:@"https://bluetoothtest.firebaseio.com/"];
+    self.firebaseUsersRef = [[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.earshotID] childByAppendingPath:@"tracking"];
+    [self.firebaseUsersRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+        // Update the locally-stored firebaseusers array
+        NSLog(@"Got data from firebase");
+        NSLog(@"%@",snapshot.value);
+        if (snapshot.value != [NSNull null]){
+            self.firebaseUsers = [NSMutableDictionary dictionaryWithDictionary:snapshot.value];
+        }
+    }];
+}
+- (void)syncDiscoveredUserToFirebase:(NSString *)userID
+{
+//    NSLog(@"Syncing user %@ to firebase", userID);
+    // Is this user already in the array?
+    NSDictionary *existingUser = [self.firebaseUsers objectForKey:userID];
+    if ([existingUser count] == 0) {
+        NSLog(@"No existing user");
+        NSDictionary *trackingUser = @{@"place":@"holder"};
+        [self.firebaseUsers setObject:trackingUser forKey:userID];
+        // Update!
+        [self.firebaseUsersRef setValue:self.firebaseUsers];
+        // Now go tell the other person
+        Firebase *otherPersonRef = [[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID];
+        [otherPersonRef setValue:trackingUser];
+    } else{
+        NSLog(@"Existing user found!");
+    }
+//    NSLog(@"Existing user looks like %@",userString);
+    
+}
+
+- (void)removeLostUserFromFirebase:(NSString *)userID
+{
+    NSLog(@"Removing user %@ from firebase",userID);
+    [self.firebaseUsers removeObjectForKey:userID];
+    // Update!
+    [self.firebaseUsersRef setValue:self.firebaseUsers];
+    NSLog(@"Firebase users -- %@",self.firebaseUsers);
+//    NSDictionary *existingUser = [self.firebaseUsers objectForKey:userID];
+//    if ([existingUser count] == 0) {
+//        NSLog(@"Removing user %@ from firebase",userID);
+//    } else{
+//        NSLog(@"Removing user!");
+//        [self.firebaseUsers removeObjectForKey:userID];
+//        // Update!
+//        [self.firebaseUsersRef setValue:self.firebaseUsers];
+//    }
 }
 
 # pragma mark - core bluetooth
@@ -203,6 +269,8 @@
     NSString *localName = [advertisementData valueForKey:@"kCBAdvDataLocalName"];
     if (localName){
         [existingUser setValue:localName forKey:@"earshotID"];
+        // Attempt to sync this user to firebase
+        [self syncDiscoveredUserToFirebase:localName];
     }
     
     if (DEBUG_CENTRAL) NSLog(@"%@",self.earshotUsers);

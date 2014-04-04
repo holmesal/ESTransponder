@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		C02EBAB218ED4CD6004D93F6 /* ESTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C02EBAB118ED4CD6004D93F6 /* ESTableViewController.m */; };
+		C0905EAD18EF617800016522 /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0905EAC18EF617800016522 /* Firebase.framework */; };
+		C0905EAF18EF618D00016522 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C0905EAE18EF618D00016522 /* libicucore.dylib */; };
+		C0905EB118EF619900016522 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C0905EB018EF619900016522 /* libc++.dylib */; };
+		C0905EB318EF61A300016522 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0905EB218EF61A300016522 /* CFNetwork.framework */; };
+		C0905EB518EF61AC00016522 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0905EB418EF61AC00016522 /* Security.framework */; };
+		C0905EB718EF61BD00016522 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0905EB618EF61BD00016522 /* SystemConfiguration.framework */; };
 		C0ACBCC218EB6C7200BBFCDF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0ACBCC118EB6C7200BBFCDF /* Foundation.framework */; };
 		C0ACBCC418EB6C7200BBFCDF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0ACBCC318EB6C7200BBFCDF /* CoreGraphics.framework */; };
 		C0ACBCC618EB6C7200BBFCDF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0ACBCC518EB6C7200BBFCDF /* UIKit.framework */; };
@@ -44,6 +50,12 @@
 /* Begin PBXFileReference section */
 		C02EBAB018ED4CD6004D93F6 /* ESTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESTableViewController.h; sourceTree = "<group>"; };
 		C02EBAB118ED4CD6004D93F6 /* ESTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESTableViewController.m; sourceTree = "<group>"; };
+		C0905EAC18EF617800016522 /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Firebase.framework; sourceTree = "<group>"; };
+		C0905EAE18EF618D00016522 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		C0905EB018EF619900016522 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
+		C0905EB218EF61A300016522 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		C0905EB418EF61AC00016522 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		C0905EB618EF61BD00016522 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		C0ACBCBE18EB6C7200BBFCDF /* transponder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = transponder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0ACBCC118EB6C7200BBFCDF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C0ACBCC318EB6C7200BBFCDF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -82,7 +94,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0905EB718EF61BD00016522 /* SystemConfiguration.framework in Frameworks */,
+				C0905EB518EF61AC00016522 /* Security.framework in Frameworks */,
+				C0905EB318EF61A300016522 /* CFNetwork.framework in Frameworks */,
+				C0905EB118EF619900016522 /* libc++.dylib in Frameworks */,
+				C0905EAF18EF618D00016522 /* libicucore.dylib in Frameworks */,
 				C0ACBD0618EBA6FC00BBFCDF /* CoreLocation.framework in Frameworks */,
+				C0905EAD18EF617800016522 /* Firebase.framework in Frameworks */,
 				C0ACBD0418EB758800BBFCDF /* CoreBluetooth.framework in Frameworks */,
 				C0ACBCC418EB6C7200BBFCDF /* CoreGraphics.framework in Frameworks */,
 				C0ACBCC618EB6C7200BBFCDF /* UIKit.framework in Frameworks */,
@@ -125,6 +143,12 @@
 		C0ACBCC018EB6C7200BBFCDF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C0905EB618EF61BD00016522 /* SystemConfiguration.framework */,
+				C0905EB418EF61AC00016522 /* Security.framework */,
+				C0905EB218EF61A300016522 /* CFNetwork.framework */,
+				C0905EB018EF619900016522 /* libc++.dylib */,
+				C0905EAE18EF618D00016522 /* libicucore.dylib */,
+				C0905EAC18EF617800016522 /* Firebase.framework */,
 				C0ACBD0518EBA6FC00BBFCDF /* CoreLocation.framework */,
 				C0ACBD0318EB758800BBFCDF /* CoreBluetooth.framework */,
 				C0ACBCC118EB6C7200BBFCDF /* Foundation.framework */,
@@ -436,9 +460,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "transponder/transponder-Prefix.pch";
 				INFOPLIST_FILE = "transponder/transponder-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -449,9 +478,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "transponder/transponder-Prefix.pch";
 				INFOPLIST_FILE = "transponder/transponder-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

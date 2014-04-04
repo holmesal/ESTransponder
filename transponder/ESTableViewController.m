@@ -7,6 +7,7 @@
 //
 
 #import "ESTableViewController.h"
+#import <Firebase/Firebase.h>
 
 @interface ESTableViewController ()
 
@@ -95,7 +96,7 @@
     {
         userName = @"Unknown name";
     }
-    NSLog(@"The user is %@",userName);
+//    NSLog(@"The user is %@",userName);
     cell.textLabel.text = userName;
     
     return cell;
