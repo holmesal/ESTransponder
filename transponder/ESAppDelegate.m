@@ -16,6 +16,7 @@
     // Set the earshot id
 //    [self.transponder setEarshotID:@"alonso-set-this-id"];
     self.transponder.earshotID = [[UIDevice currentDevice] name];
+    [self.transponder initFirebase:@"https://bluetoothtest.firebaseio.com/"];
     [self.transponder startDetecting];
     [self.transponder startBroadcasting];
     

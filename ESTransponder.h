@@ -20,6 +20,9 @@
 @property (nonatomic, readonly) BOOL isDetecting;
 @property (nonatomic, readonly) BOOL isBroadcasting;
 
+// Init the firebase with a base URL
+- (void)initFirebase:(NSString *)baseURL;
+
 // Sets the earshot id, and starts advertising it.
 - (void)setEarshotID:(NSString *)earshotID;
 
