@@ -57,6 +57,8 @@
         self.earshotID = userID;
         self.identifier = [CBUUID UUIDWithString:IDENTIFIER_STRING];
         self.bluetoothUsers = [[NSMutableDictionary alloc] init];
+        // Setup the firebase
+        [self initFirebase:firebaseURL];
         // Start off NOT flipping between beacons/bluetooth
         self.isAdvertisingAsBeacon = NO;
         // Setup beacon monitoring for regions
@@ -114,8 +116,10 @@
         // If it's longer than 20 seconds, they're probs gone
         if (lastSeen > 20.0) {
             if (DEBUG_USERS) NSLog(@"Removing user: %@",userBeacon);
-            // Remove from earshotUsers
-            [self removeUser:[userBeacon objectForKey:@"earshotID"]];
+            // Remove from earshotUsers, if it's actually in there
+            if ([userBeacon objectForKey:@"earshotID"] != [NSNull null]) {
+                [self removeUser:[userBeacon objectForKey:@"earshotID"]];
+            }
             // Remove from bluetooth users
             [self.bluetoothUsers removeObjectForKey:userBeaconKey];
         } else {
@@ -152,6 +156,7 @@
 - (void)removeUser:(NSString *)userID
 {
 #warning not sure this is the right way to handle removing users...
+#warning - add feature to not remove this user if it exists elsewhere in the bluetooth array
     // Remove the user for yourself
     [[self.earshotUsersRef childByAppendingPath:userID] removeValue];
     // Remove yourself for the user
@@ -372,6 +377,7 @@
         case CBPeripheralManagerStatePoweredOn:
         {
             if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStatePoweredOn");
+//            self.peripheralManagerIsRunning = YES;
             [self startScanning];
         }
             break;
