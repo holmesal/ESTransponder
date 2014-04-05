@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreBluetooth/CoreBluetooth.h>
+#import <CoreLocation/CoreLocation.h>
 
 @interface ESTransponder : NSObject
 
@@ -19,6 +21,10 @@
 @property (strong, nonatomic) NSMutableDictionary *earshotUsers;
 @property (nonatomic, readonly) BOOL isDetecting;
 @property (nonatomic, readonly) BOOL isBroadcasting;
+@property (nonatomic) BOOL peripheralManagerIsRunning;
+
+// Init with an earshotID and a firebase URL
+- (id)initWithEarshotID:(NSString *)userID andFirebaseRootURL:(NSString *)firebaseURL;
 
 // Init the firebase with a base URL
 - (void)initFirebase:(NSString *)baseURL;
@@ -40,12 +46,15 @@
 - (void)resetBluetooth;
 
 // Gets an array of earshot ids, one for each user currently in-range
-- (NSArray *)getUsersInRange;
+//- (NSArray *)getUsersInRange;
+
+// Gets the current location
+- (CLLocation *)getLocation;
 
 // Events API
 /*
-    earshotDiscover - fired when a CoreBluetooth user is discovered. The user may or may not have a earshotID yet. Data contains the user that was just discovered, as well as a list of all the users that have been discovered so far
+ earshotDiscover - fired when a CoreBluetooth user is discovered. The user may or may not have a earshotID yet. Data contains the user that was just discovered, as well as a list of all the users that have been discovered so far
  
-*/
+ */
 
 @end

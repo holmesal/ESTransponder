@@ -7,8 +7,6 @@
 //
 
 #import "ESTransponder.h"
-#import <CoreBluetooth/CoreBluetooth.h>
-#import <CoreLocation/CoreLocation.h>
 #import <Firebase/Firebase.h>
 
 // Extensions
@@ -16,10 +14,12 @@
 #import "CBPeripheralManager+Ext.h"
 #import "CBUUID+Ext.h"
 
-#define DEBUG_CENTRAL NO
-#define DEBUG_PERIPHERAL NO
+#define DEBUG_CENTRAL YES
+#define DEBUG_PERIPHERAL YES
 #define DEBUG_BEACON NO
 #define DEBUG_USERS YES
+
+#define IS_RUNNING_ON_SIMULATOR NO
 
 #define NUM_BEACONS 20
 
@@ -49,10 +49,12 @@
 
 @implementation ESTransponder
 @synthesize earshotID;
+@synthesize peripheralManagerIsRunning;
 
-- (id)init
+- (id)initWithEarshotID:(NSString *)userID andFirebaseRootURL:(NSString *)firebaseURL
 {
     if ((self = [super init])) {
+        self.earshotID = userID;
         self.identifier = [CBUUID UUIDWithString:IDENTIFIER_STRING];
         self.bluetoothUsers = [[NSMutableDictionary alloc] init];
         // Start off NOT flipping between beacons/bluetooth
@@ -61,41 +63,40 @@
         [self setupBeaconRegions];
         // Start a repeating timer to prune the in-range users, every 10 seconds
         [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(pruneUsers) userInfo:nil repeats:YES];
-        
     }
     return self;
 }
+//
+//- (void)setEarshotID:(NSString *)earshitId
+//{
+//    earshotID = earshitId;
+//    // Set up firebase
+//    //    [self initFirebase];
+//}
 
-- (void)setEarshotID:(NSString *)earshitId
-{
-    earshotID = earshitId;
-    // Set up firebase
-//    [self initFirebase];
-}
-
-# pragma mark - user management
-- (NSArray *)getUsersInRange
-{
-    NSMutableArray *usersInRange = [[NSMutableArray alloc] init];
-    // Loop through the current users and add any in-range users, killing dupes
-    for(NSMutableDictionary *userBeaconKey in self.bluetoothUsers)
-    {
-        NSMutableDictionary *userBeacon = [self.bluetoothUsers objectForKey:userBeaconKey];
-        if ([userBeacon valueForKey:@"earshotID"] != [NSNull null])
-        {
-            if (![usersInRange containsObject:[userBeacon valueForKey:@"earshotID"]])
-            {
-                [usersInRange addObject:[userBeacon valueForKey:@"earshotID"]];
-            } else{
-                if (DEBUG_USERS) {NSLog(@"NOT ADDING - DUPE");}
-            }
-        } else{
-            if (DEBUG_USERS){NSLog(@"NOT ADDING - EMPTY");}
-        }
-    }
-    if (DEBUG_USERS) NSLog(@"user array - %@",usersInRange);
-    return [[NSArray alloc] initWithArray:usersInRange];
-}
+//# pragma mark - user management
+//- (NSArray *)getUsersInRange
+//{
+//    NSMutableArray *usersInRange = [[NSMutableArray alloc] init];
+//    // Loop through the current users and add any in-range users, killing dupes
+//    for(NSMutableDictionary *userBeaconKey in self.bluetoothUsers)
+//    {
+//        NSMutableDictionary *userBeacon = [self.bluetoothUsers objectForKey:userBeaconKey];
+//        if ([userBeacon valueForKey:@"earshotID"] != [NSNull null])
+//        {
+//            if (![usersInRange containsObject:[userBeacon valueForKey:@"earshotID"]])
+//            {
+//                [usersInRange addObject:[userBeacon valueForKey:@"earshotID"]];
+//            } else{
+//                if (DEBUG_USERS) {NSLog(@"NOT ADDING - DUPE");}
+//            }
+//        } else{
+//            if (DEBUG_USERS){NSLog(@"NOT ADDING - EMPTY");}
+//        }
+//    }
+//    if (DEBUG_USERS) NSLog(@"user array - %@",usersInRange);
+//    return [[NSArray alloc] initWithArray:usersInRange];
+//}
 
 - (void)pruneUsers
 {
@@ -121,8 +122,6 @@
             if (DEBUG_USERS) NSLog(@"Not removing user: %@",userBeacon);
         }
     }
-    // Update the users in range
-    [self getUsersInRange];
     
 }
 
@@ -183,7 +182,7 @@
 //        NSLog(@"Existing user found!");
 //    }
 ////    NSLog(@"Existing user looks like %@",userString);
-//    
+//
 //}
 //
 //- (void)removeLostUserFromFirebase:(NSString *)userID
@@ -208,8 +207,8 @@
 
 - (void)startDetecting
 {
-//    if (![self canMonitorTransponders])
-//        return;
+    //    if (![self canMonitorTransponders])
+    //        return;
     [self startDetectingTransponders];
 }
 
@@ -224,11 +223,11 @@
 {
     if (!self.centralManager)
         NSLog(@"New central created");
-        self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+    self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     
     // Uncomment this timer if you need to report ranges in a timer
-//    detectorTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_INTERVAL target:self
-//                                                   selector:@selector(reportRanges:) userInfo:nil repeats:YES];
+    //    detectorTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_INTERVAL target:self
+    //                                                   selector:@selector(reportRanges:) userInfo:nil repeats:YES];
 }
 
 - (void)startBluetoothBroadcast
@@ -305,7 +304,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"earshotDiscover"
                                                         object:self
                                                       userInfo:@{@"user":existingUser,
-                                                                 @"identifiedUsers":[self getUsersInRange],
+                                                                 @"identifiedUsers":self.earshotUsers,
                                                                  @"bluetoothUsers":self.bluetoothUsers}];
     
 }
@@ -314,9 +313,71 @@
 {
     if (DEBUG_CENTRAL) NSLog(@"-- central state changed: %@", self.centralManager.stateString);
     
-    if (central.state == CBCentralManagerStatePoweredOn) {
-        [self startScanning];
+    /*CBPeripheralManagerStateUnknown = 0,
+     CBPeripheralManagerStateResetting,
+     CBPeripheralManagerStateUnsupported,
+     CBPeripheralManagerStateUnauthorized,
+     CBPeripheralManagerStatePoweredOff,
+     CBPeripheralManagerStatePoweredOn
+     */
+    if (DEBUG_CENTRAL) NSLog(@"\n");
+    switch (central.state) {
+        case CBPeripheralManagerStateUnknown:
+        {
+            if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStateUnknown");
+        }
+            break;
+        case CBPeripheralManagerStateResetting:
+        {
+            if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStateResetting");
+        }
+            break;
+        case CBPeripheralManagerStateUnsupported:
+        {
+            //just for when I am running on simulator,
+            if (!IS_RUNNING_ON_SIMULATOR)
+            {
+                //unsuported state means the device cannot do bluetooth low energy
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oh noes" message:@"The platform doesn't support the Bluetooth low energy peripheral/server role." delegate:nil cancelButtonTitle:@"Dang!" otherButtonTitles:nil];
+                [alert show];
+                self.peripheralManagerIsRunning = NO;
+                if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStateUnsupported");
+            } else
+            {
+                if (DEBUG_CENTRAL) NSLog(@"FAKE CBPeripheralManagerStateUnauthorized");
+                self.peripheralManagerIsRunning = NO;
+                
+                [self blueToothStackNeedsUserToActivateMessage];
+            }
+        }
+            break;
+        case CBPeripheralManagerStateUnauthorized:
+        {
+            if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStateUnauthorized");
+            self.peripheralManagerIsRunning = NO;
+            
+            [self blueToothStackNeedsUserToActivateMessage];
+            
+        }
+            break;
+        case CBPeripheralManagerStatePoweredOff:
+        {
+            if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStatePoweredOff");
+            self.peripheralManagerIsRunning = NO;
+            
+            [self blueToothStackNeedsUserToActivateMessage];
+            
+        }
+            break;
+        case CBPeripheralManagerStatePoweredOn:
+        {
+            if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStatePoweredOn");
+            [self startScanning];
+        }
+            break;
     }
+    if (DEBUG_CENTRAL) NSLog(@"\n");
+    
 }
 
 #pragma mark - CBPeripheralManagerDelegate
@@ -403,7 +464,7 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW,  1000* NSEC_PER_MSEC), dispatch_get_main_queue(),                ^{
             [self flipState];
         });
-
+        
     } else
     {
         [self resetBluetooth];
@@ -474,7 +535,7 @@
 {
     // What region?
     NSNumber *minor = [region valueForKey:@"minor"];
-//    NSLog(@"Got state %li for region %@ : %@",state,minor,region);
+    //    NSLog(@"Got state %li for region %@ : %@",state,minor,region);
     switch (state) {
         case CLRegionStateInside:
             [self.regions replaceObjectAtIndex:[minor intValue] withObject:@YES];
@@ -491,10 +552,10 @@
             [self.regions replaceObjectAtIndex:[minor intValue] withObject:@NO];
             if (DEBUG_BEACON){
                 NSLog(@"--- Exited region: %@", region);
-//                UILocalNotification *notice = [[UILocalNotification alloc] init];
-//                notice.alertBody = [NSString stringWithFormat:@"Exited region %@",minor];
-//                notice.alertAction = @"Open";
-//                [[UIApplication sharedApplication] scheduleLocalNotification:notice];
+                //                UILocalNotification *notice = [[UILocalNotification alloc] init];
+                //                notice.alertBody = [NSString stringWithFormat:@"Exited region %@",minor];
+                //                notice.alertAction = @"Open";
+                //                [[UIApplication sharedApplication] scheduleLocalNotification:notice];
                 NSLog(@"%@",self.regions);
             }
             break;
@@ -503,6 +564,86 @@
             break;
         default:
             NSLog(@"This is never supposed to happen.");
+            break;
+    }
+}
+
+
+# pragma mark - auth and status
+-(void)blueToothStackIsActive
+{
+    self.peripheralManagerIsRunning = YES;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Bluetooth Enabled" object:nil];
+}
+-(void)blueToothStackNeedsUserToActivateMessage
+{
+    if (IS_RUNNING_ON_SIMULATOR)
+    {
+        [self blueToothStackIsActive];
+    } else
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Bluetooth Disabled" object:nil];
+    }
+}
+
+-(BOOL)peripheralManagerIsRunning
+{
+    BOOL isOK = NO;
+    switch ([ CLLocationManager authorizationStatus] ) {
+        case kCLAuthorizationStatusAuthorized:
+            isOK = YES;
+            break;
+        case kCLAuthorizationStatusDenied:
+            isOK = NO;
+            break;
+        case kCLAuthorizationStatusNotDetermined:
+            isOK = NO;
+            break;
+        case kCLAuthorizationStatusRestricted:
+            isOK = NO;
+            break;
+            
+    }
+    
+    BOOL val = peripheralManagerIsRunning && isOK;
+    return val;
+}
+
+-(CLLocation*)getLocation
+{
+    return self.locationManager.location;
+}
+
+-(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
+{
+    // Check for supported devices
+    switch ([CLLocationManager authorizationStatus])
+    {
+        case kCLAuthorizationStatusRestricted:
+        {
+            NSLog(@"kCLAuthorizationStatusRestricted");
+            [self blueToothStackNeedsUserToActivateMessage];
+        }
+            break;
+            
+        case kCLAuthorizationStatusDenied:
+        {
+            NSLog(@"kCLAuthorizationStatusDenied");
+            [self blueToothStackNeedsUserToActivateMessage];
+        }
+            break;
+            
+        case kCLAuthorizationStatusAuthorized:
+        {
+            NSLog(@"kCLAuthorizationStatusAuthorized");
+            [self blueToothStackIsActive];
+        }
+            break;
+            
+        case kCLAuthorizationStatusNotDetermined:
+        {
+            NSLog(@"kCLAuthorizationStatusNotDetermined");//user has not yet said yes or no
+        }
             break;
     }
 }
