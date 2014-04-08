@@ -146,17 +146,23 @@
     for (NSString *userKey in self.earshotUsers) {
         // If the timeout is too old, clear it out
         NSNumber *timestampNumber = [self.earshotUsers objectForKey:userKey];
-        long timestamp = [timestampNumber longValue];
-        
-        NSDate *beforeDate = [[NSDate alloc] initWithTimeIntervalSince1970:timestamp];
-        
-        NSTimeInterval interval = [currentDate timeIntervalSinceDate:beforeDate];
-        
-        NSLog(@"Long filter timeout for user %@ --> %f",userKey,interval);
-        
-        if (interval > TIMEOUT * 10.0) {
-            NSLog(@"REMOVING USER %@ - has been too long",userKey);
-            // Remove the user
+        // Protect against weird values here
+        if ([timestampNumber isKindOfClass:[NSNumber class]]) {
+            long timestamp = [timestampNumber longValue];
+            
+            NSDate *beforeDate = [[NSDate alloc] initWithTimeIntervalSince1970:timestamp];
+            
+            NSTimeInterval interval = [currentDate timeIntervalSinceDate:beforeDate];
+            
+            NSLog(@"Long filter timeout for user %@ --> %f",userKey,interval);
+            
+            if (interval > TIMEOUT * 10.0) {
+                NSLog(@"REMOVING USER %@ - has been too long",userKey);
+                // Remove the user
+                [self removeUser:userKey];
+            }
+        } else {
+            // There's a weird value here
             [self removeUser:userKey];
         }
     }
