@@ -13,7 +13,6 @@
 #import "CBCentralManager+Ext.h"
 #import "CBPeripheralManager+Ext.h"
 #import "CBUUID+Ext.h"
-#import "Math.h"
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
