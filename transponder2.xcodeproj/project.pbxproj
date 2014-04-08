@@ -57,21 +57,21 @@
 		C0905EB218EF61A300016522 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		C0905EB418EF61AC00016522 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C0905EB618EF61BD00016522 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		C0ACBCBE18EB6C7200BBFCDF /* the-transponder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "the-transponder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0ACBCBE18EB6C7200BBFCDF /* transponder2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = transponder2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0ACBCC118EB6C7200BBFCDF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C0ACBCC318EB6C7200BBFCDF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		C0ACBCC518EB6C7200BBFCDF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		C0ACBCC918EB6C7200BBFCDF /* the-transponder-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "the-transponder-Info.plist"; sourceTree = "<group>"; };
+		C0ACBCC918EB6C7200BBFCDF /* transponder2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "transponder2-Info.plist"; sourceTree = "<group>"; };
 		C0ACBCCB18EB6C7200BBFCDF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C0ACBCCD18EB6C7200BBFCDF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		C0ACBCCF18EB6C7200BBFCDF /* the-transponder-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "the-transponder-Prefix.pch"; sourceTree = "<group>"; };
+		C0ACBCCF18EB6C7200BBFCDF /* transponder2-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "transponder2-Prefix.pch"; sourceTree = "<group>"; };
 		C0ACBCD018EB6C7200BBFCDF /* ESAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ESAppDelegate.h; sourceTree = "<group>"; };
 		C0ACBCD118EB6C7200BBFCDF /* ESAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ESAppDelegate.m; sourceTree = "<group>"; };
 		C0ACBCD418EB6C7200BBFCDF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C0ACBCD618EB6C7200BBFCDF /* ESViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ESViewController.h; sourceTree = "<group>"; };
 		C0ACBCD718EB6C7200BBFCDF /* ESViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ESViewController.m; sourceTree = "<group>"; };
 		C0ACBCD918EB6C7200BBFCDF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		C0ACBCDF18EB6C7200BBFCDF /* the-transponderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "the-transponderTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0ACBCDF18EB6C7200BBFCDF /* transponder2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = transponder2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0ACBCE018EB6C7200BBFCDF /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		C0ACBCE818EB6C7200BBFCDF /* transponderTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "transponderTests-Info.plist"; sourceTree = "<group>"; };
 		C0ACBCEA18EB6C7200BBFCDF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -135,8 +135,8 @@
 		C0ACBCBF18EB6C7200BBFCDF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C0ACBCBE18EB6C7200BBFCDF /* the-transponder.app */,
-				C0ACBCDF18EB6C7200BBFCDF /* the-transponderTests.xctest */,
+				C0ACBCBE18EB6C7200BBFCDF /* transponder2.app */,
+				C0ACBCDF18EB6C7200BBFCDF /* transponder2Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -184,11 +184,11 @@
 		C0ACBCC818EB6C7200BBFCDF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				C0ACBCC918EB6C7200BBFCDF /* the-transponder-Info.plist */,
+				C0ACBCC918EB6C7200BBFCDF /* transponder2-Info.plist */,
 				C0ACBCCA18EB6C7200BBFCDF /* InfoPlist.strings */,
 				C0ACBCCD18EB6C7200BBFCDF /* main.m */,
 				C004E32B18F35B2400F0E7F9 /* Math.h */,
-				C0ACBCCF18EB6C7200BBFCDF /* the-transponder-Prefix.pch */,
+				C0ACBCCF18EB6C7200BBFCDF /* transponder2-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -227,9 +227,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C0ACBCBD18EB6C7200BBFCDF /* the-transponder */ = {
+		C0ACBCBD18EB6C7200BBFCDF /* transponder2 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C0ACBCF018EB6C7200BBFCDF /* Build configuration list for PBXNativeTarget "the-transponder" */;
+			buildConfigurationList = C0ACBCF018EB6C7200BBFCDF /* Build configuration list for PBXNativeTarget "transponder2" */;
 			buildPhases = (
 				C0ACBCBA18EB6C7200BBFCDF /* Sources */,
 				C0ACBCBB18EB6C7200BBFCDF /* Frameworks */,
@@ -239,14 +239,14 @@
 			);
 			dependencies = (
 			);
-			name = "the-transponder";
+			name = transponder2;
 			productName = transponder;
-			productReference = C0ACBCBE18EB6C7200BBFCDF /* the-transponder.app */;
+			productReference = C0ACBCBE18EB6C7200BBFCDF /* transponder2.app */;
 			productType = "com.apple.product-type.application";
 		};
-		C0ACBCDE18EB6C7200BBFCDF /* the-transponderTests */ = {
+		C0ACBCDE18EB6C7200BBFCDF /* transponder2Tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C0ACBCF318EB6C7200BBFCDF /* Build configuration list for PBXNativeTarget "the-transponderTests" */;
+			buildConfigurationList = C0ACBCF318EB6C7200BBFCDF /* Build configuration list for PBXNativeTarget "transponder2Tests" */;
 			buildPhases = (
 				C0ACBCDB18EB6C7200BBFCDF /* Sources */,
 				C0ACBCDC18EB6C7200BBFCDF /* Frameworks */,
@@ -257,9 +257,9 @@
 			dependencies = (
 				C0ACBCE518EB6C7200BBFCDF /* PBXTargetDependency */,
 			);
-			name = "the-transponderTests";
+			name = transponder2Tests;
 			productName = transponderTests;
-			productReference = C0ACBCDF18EB6C7200BBFCDF /* the-transponderTests.xctest */;
+			productReference = C0ACBCDF18EB6C7200BBFCDF /* transponder2Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -284,7 +284,7 @@
 					};
 				};
 			};
-			buildConfigurationList = C0ACBCB918EB6C7100BBFCDF /* Build configuration list for PBXProject "the-transponder" */;
+			buildConfigurationList = C0ACBCB918EB6C7100BBFCDF /* Build configuration list for PBXProject "transponder2" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -297,8 +297,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C0ACBCBD18EB6C7200BBFCDF /* the-transponder */,
-				C0ACBCDE18EB6C7200BBFCDF /* the-transponderTests */,
+				C0ACBCBD18EB6C7200BBFCDF /* transponder2 */,
+				C0ACBCDE18EB6C7200BBFCDF /* transponder2Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -354,7 +354,7 @@
 /* Begin PBXTargetDependency section */
 		C0ACBCE518EB6C7200BBFCDF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = C0ACBCBD18EB6C7200BBFCDF /* the-transponder */;
+			target = C0ACBCBD18EB6C7200BBFCDF /* transponder2 */;
 			targetProxy = C0ACBCE418EB6C7200BBFCDF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -419,7 +419,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
@@ -451,7 +451,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -467,10 +467,10 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "transponder/the-transponder-Prefix.pch";
-				INFOPLIST_FILE = "transponder/the-transponder-Info.plist";
+				GCC_PREFIX_HEADER = "transponder/transponder2-Prefix.pch";
+				INFOPLIST_FILE = "transponder/transponder2-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "the-transponder";
+				PRODUCT_NAME = transponder2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -485,10 +485,10 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "transponder/the-transponder-Prefix.pch";
-				INFOPLIST_FILE = "transponder/the-transponder-Info.plist";
+				GCC_PREFIX_HEADER = "transponder/transponder2-Prefix.pch";
+				INFOPLIST_FILE = "transponder/transponder2-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "the-transponder";
+				PRODUCT_NAME = transponder2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -509,7 +509,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "transponderTests/transponderTests-Info.plist";
-				PRODUCT_NAME = "the-transponderTests";
+				PRODUCT_NAME = transponder2Tests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -527,7 +527,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "transponder/transponder-Prefix.pch";
 				INFOPLIST_FILE = "transponderTests/transponderTests-Info.plist";
-				PRODUCT_NAME = "the-transponderTests";
+				PRODUCT_NAME = transponder2Tests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -536,7 +536,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C0ACBCB918EB6C7100BBFCDF /* Build configuration list for PBXProject "the-transponder" */ = {
+		C0ACBCB918EB6C7100BBFCDF /* Build configuration list for PBXProject "transponder2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C0ACBCEE18EB6C7200BBFCDF /* Debug */,
@@ -545,7 +545,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C0ACBCF018EB6C7200BBFCDF /* Build configuration list for PBXNativeTarget "the-transponder" */ = {
+		C0ACBCF018EB6C7200BBFCDF /* Build configuration list for PBXNativeTarget "transponder2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C0ACBCF118EB6C7200BBFCDF /* Debug */,
@@ -554,7 +554,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C0ACBCF318EB6C7200BBFCDF /* Build configuration list for PBXNativeTarget "the-transponderTests" */ = {
+		C0ACBCF318EB6C7200BBFCDF /* Build configuration list for PBXNativeTarget "transponder2Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C0ACBCF418EB6C7200BBFCDF /* Debug */,

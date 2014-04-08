@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C0ACBCBD18EB6C7200BBFCDF"
-               BuildableName = "transponder.app"
-               BlueprintName = "the-transponder"
-               ReferencedContainer = "container:the-transponder.xcodeproj">
+               BuildableName = "the-transponder.app"
+               BlueprintName = "transponder2"
+               ReferencedContainer = "container:transponder2.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C0ACBCDE18EB6C7200BBFCDF"
-               BuildableName = "transponderTests.xctest"
-               BlueprintName = "the-transponderTests"
-               ReferencedContainer = "container:the-transponder.xcodeproj">
+               BuildableName = "the-transponderTests.xctest"
+               BlueprintName = "transponder2Tests"
+               ReferencedContainer = "container:transponder2.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -43,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C0ACBCBD18EB6C7200BBFCDF"
-            BuildableName = "transponder.app"
-            BlueprintName = "the-transponder"
-            ReferencedContainer = "container:the-transponder.xcodeproj">
+            BuildableName = "the-transponder.app"
+            BlueprintName = "transponder2"
+            ReferencedContainer = "container:transponder2.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C0ACBCBD18EB6C7200BBFCDF"
-            BuildableName = "transponder.app"
-            BlueprintName = "the-transponder"
-            ReferencedContainer = "container:the-transponder.xcodeproj">
+            BuildableName = "the-transponder.app"
+            BlueprintName = "transponder2"
+            ReferencedContainer = "container:transponder2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -80,9 +80,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C0ACBCBD18EB6C7200BBFCDF"
-            BuildableName = "transponder.app"
-            BlueprintName = "the-transponder"
-            ReferencedContainer = "container:the-transponder.xcodeproj">
+            BuildableName = "the-transponder.app"
+            BlueprintName = "transponder2"
+            ReferencedContainer = "container:transponder2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

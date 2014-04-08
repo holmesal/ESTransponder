@@ -84,58 +84,12 @@
         // Listen for chirpBeacon events
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chirpBeacon) name:@"chirpBeacon" object:nil];
         // Listen for app sleep events
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterForeground) name:@"appWillEnterForeground" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterForeground) name:UIApplicationDidBecomeActiveNotification object:nil];
         // Listen for app wakeup events
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterBackground) name:@"appWillEnterBackground" object:nil];
-        
-        
-#warning this is bullshit
-//        [self setupBeaconRegions];
-        
-//        if ([[UIApplication sharedApplication] backgroundRefreshStatus] == UIBackgroundRefreshStatusAvailable) {
-//            
-//            NSLog(@"Background updates are available for the app.");
-//        }else if([[UIApplication sharedApplication] backgroundRefreshStatus] == UIBackgroundRefreshStatusDenied)
-//        {
-//            NSLog(@"The user explicitly disabled background behavior for this app or for the whole system.");
-//        }else if([[UIApplication sharedApplication] backgroundRefreshStatus] == UIBackgroundRefreshStatusRestricted)
-//        {
-//            NSLog(@"Background updates are unavailable and the user cannot enable them again. For example, this status can occur when parental controls are in effect for the current user.");
-//        }
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterBackground) name:UIApplicationWillResignActiveNotification object:nil];
     }
     return self;
 }
-//
-//- (void)setEarshotID:(NSString *)earshitId
-//{
-//    earshotID = earshitId;
-//    // Set up firebase
-//    //    [self initFirebase];
-//}
-
-//# pragma mark - user management
-//- (NSArray *)getUsersInRange
-//{
-//    NSMutableArray *usersInRange = [[NSMutableArray alloc] init];
-//    // Loop through the current users and add any in-range users, killing dupes
-//    for(NSMutableDictionary *userBeaconKey in self.bluetoothUsers)
-//    {
-//        NSMutableDictionary *userBeacon = [self.bluetoothUsers objectForKey:userBeaconKey];
-//        if ([userBeacon valueForKey:@"earshotID"] != [NSNull null])
-//        {
-//            if (![usersInRange containsObject:[userBeacon valueForKey:@"earshotID"]])
-//            {
-//                [usersInRange addObject:[userBeacon valueForKey:@"earshotID"]];
-//            } else{
-//                if (DEBUG_USERS) {NSLog(@"NOT ADDING - DUPE");}
-//            }
-//        } else{
-//            if (DEBUG_USERS){NSLog(@"NOT ADDING - EMPTY");}
-//        }
-//    }
-//    if (DEBUG_USERS) NSLog(@"user array - %@",usersInRange);
-//    return [[NSArray alloc] initWithArray:usersInRange];
-//}
 
 - (void)pruneUsers
 {
@@ -239,50 +193,6 @@
     [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID] removeValue];
 }
 
-//// Syncs the users currently in earshotUsers to firebase for both this user and the other users
-//- (void)syncOtherUserToFirebase:(NSString *)target
-//{
-//    // Fake a bluetooth dictionary
-//    [self.earshotUsersRef setValue:self.earshotUsers];
-//}
-//- (void)syncDiscoveredUserToFirebase:(NSString *)userID
-//{
-////    NSLog(@"Syncing user %@ to firebase", userID);
-//    // Is this user already in the array?
-//    NSDictionary *existingUser = [self.earshotUsers objectForKey:userID];
-//    if ([existingUser count] == 0) {
-//        NSLog(@"No existing user");
-//        NSDictionary *trackingUser = @{@"place":@"holder"};
-//        [self.earshotUsers setObject:trackingUser forKey:userID];
-//        // Update!
-//        [self.earshotUsersRef setValue:self.earshotUsers];
-//        // Now go tell the other person
-//        Firebase *otherPersonRef = [[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID];
-//        [otherPersonRef setValue:trackingUser];
-//    } else{
-//        NSLog(@"Existing user found!");
-//    }
-////    NSLog(@"Existing user looks like %@",userString);
-//
-//}
-//
-//- (void)removeLostUserFromFirebase:(NSString *)userID
-//{
-//    NSLog(@"Removing user %@ from firebase",userID);
-//    [self.earshotUsers removeObjectForKey:userID];
-//    // Update!
-//    [self.earshotUsersRef setValue:self.earshotUsers];
-//    NSLog(@"Firebase users -- %@",self.earshotUsers);
-////    NSDictionary *existingUser = [self.earshotUsers objectForKey:userID];
-////    if ([existingUser count] == 0) {
-////        NSLog(@"Removing user %@ from firebase",userID);
-////    } else{
-////        NSLog(@"Removing user!");
-////        [self.earshotUsers removeObjectForKey:userID];
-////        // Update!
-////        [self.earshotUsersRef setValue:self.earshotUsers];
-////    }
-//}
 
 
 # pragma mark - FOREGROUND vs BACKGROUND modes
@@ -348,7 +258,6 @@
 {
     // Setup beacon monitoring for regions
     [self setupBeaconRegions];
-//    [self performSelector:@selector(setupBeaconRegions) withObject:nil afterDelay:10.0];
     // Listen for bluetooth LE
     [self startDetectingTransponders];
 }
@@ -546,25 +455,13 @@
 
 
 #pragma mark - iBeacon broadcasting
-//- (void)tryToChirpBeacon
-//{
-//    if (DEBUG_BEACON) NSLog(@"Trying to chirp beacon");
-//    // Has regions been initialized yet?
-//    if ([self.regions count]) {
-//        if (DEBUG_BEACON) NSLog(@"Regions has been setup, chirping that shit.");
-//        [self chirpBeacon];
-//    } else {
-//        if (DEBUG_BEACON) NSLog(@"Regions haven't been set up yet, trying again in 1 second.");
-//        [self performSelector:@selector(tryToChirpBeacon) withObject:nil afterDelay:10.0];
-//    }
-//}
 
 // Setup the beacon responsible for communicating the user's earshot ID
 - (void)initIdentityBeacon:(NSString *)userID
 {
     CLBeaconRegion *identityBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
                                                                          major:19
-                                                                         minor:1234
+                                                                         minor:[userID intValue]
                                                                     identifier:[NSString stringWithFormat:@"Broadcast region %d",19]];
     self.identityBeaconData = [identityBeaconRegion peripheralDataWithMeasuredPower:nil];
     
@@ -701,34 +598,6 @@
         // Do this again after a while
         [self performSelector:@selector(flipState) withObject:nil afterDelay:1.0];
     }
-    
-    
-    // Do whatever you're not doing right now
-//    self.isAdvertisingAsBeacon = !self.isAdvertisingAsBeacon;
-//    if (DEBUG_BEACON) NSLog(@"Advertising as beacon? %@",self.isAdvertisingAsBeacon ? @"true" : @"false");
-//    // Do whatever that is
-//    if (self.isAdvertisingAsBeacon){
-//        [self startBeacon];
-//    } else{
-//        [self resetBluetooth];
-//    }
-//    if (DEBUG_BEACON) NSLog(@"Flipping!");
-//    // Maximum number of flips
-//    NSInteger maxFlips = 10;
-//    // Set timeout if flip state < maxflips
-//    if(self.flipCount < maxFlips)
-//    {
-//        self.flipCount++;
-//        // Change the advertising method, so the next wakeup has it
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW,  1000* NSEC_PER_MSEC), dispatch_get_main_queue(),                ^{
-//            [self flipState];
-//        });
-//        
-//    } else
-//    {
-//        self.currentlyChirping = NO;
-//        [self resetBluetooth];
-//    }
     
 }
 

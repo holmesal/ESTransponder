@@ -12,7 +12,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.transponder = [[ESTransponder alloc] initWithEarshotID:[[UIDevice currentDevice] name] andFirebaseRootURL:@"https://bluetoothtest.firebaseio.com/"];
+    self.transponder = [[ESTransponder alloc] initWithEarshotID:@"65530" andFirebaseRootURL:@"https://bluetoothtest.firebaseio.com/"];
     // Set the earshot id
 //    [self.transponder setEarshotID:@"alonso-set-this-id"];
 //    self.transponder.earshotID = [[UIDevice currentDevice] name];
