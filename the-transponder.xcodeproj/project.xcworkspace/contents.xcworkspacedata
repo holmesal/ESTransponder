@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:transponder.xcodeproj">
+      location = "self:the-transponder.xcodeproj">
    </FileRef>
 </Workspace>
