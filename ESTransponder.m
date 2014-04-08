@@ -22,9 +22,10 @@
 
 #define IS_RUNNING_ON_SIMULATOR NO
 
-#define MAX_BEACON 19
-#define TIMEOUT 10.0 //For users
-#define BEACON_TIMEOUT 10.0 //For beacon ranging in the background
+#define MAX_BEACON 19 // How many beacons to use (IOS max 19)
+#define TIMEOUT 120.0 // How old should a user be before I consider them gone?
+#define REPORTING_INTERVAL 10.0 // How often to report to firebase
+#define BEACON_TIMEOUT 10.0 // How long to range when a beacon is discovered (background only)
 
 @interface ESTransponder() <CBPeripheralManagerDelegate, CBCentralManagerDelegate, CLLocationManagerDelegate>
 // Bluetooth / main class stuff
@@ -134,7 +135,7 @@
         if (snapshot.value != [NSNull null]){
             self.earshotUsers = [NSMutableDictionary dictionaryWithDictionary:snapshot.value];
             // Filter the users based on timeout
-            //            [self filterFirebaseUsers];
+            [self filterFirebaseUsers];
         }
     }];
 }
@@ -162,7 +163,7 @@
     }
 }
 
-// Takes in a bluetooth user and adds it to earshotUsers
+// Takes in a bluetooth or iBeacon user and adds it to earshotUsers
 - (void)addUser:(NSString *)userID
 {
     NSLog(@"Adding user to firebase: %@",userID);
@@ -181,7 +182,7 @@
 {
     // Round to the nearest 5 seconds
     //    NSLog(@"time = %f", time);
-    double rounded = TIMEOUT * floor((time/TIMEOUT)+0.5);
+    double rounded = REPORTING_INTERVAL * floor((time/REPORTING_INTERVAL)+0.5);
     return rounded;
 }
 
