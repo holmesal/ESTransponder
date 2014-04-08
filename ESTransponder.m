@@ -23,7 +23,8 @@
 #define IS_RUNNING_ON_SIMULATOR NO
 
 #define MAX_BEACON 19
-#define TIMEOUT 10.0
+#define TIMEOUT 10.0 //For users
+#define BEACON_TIMEOUT 10.0 //For beacon ranging in the background
 
 @interface ESTransponder() <CBPeripheralManagerDelegate, CBCentralManagerDelegate, CLLocationManagerDelegate>
 // Bluetooth / main class stuff
@@ -46,6 +47,7 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) NSMutableArray *regions;
 @property (strong, nonatomic) CLBeaconRegion *rangingRegion;
+@property (strong, nonatomic) NSTimer *rangingTimeout;
 
 // Firebase-synced users array
 @property (strong, nonatomic) Firebase *rootRef;
@@ -215,7 +217,7 @@
     // Start advertising only as a BLE peripheral
     [self stopFlipping];
     // Stop ranging beacons
-    [self.locationManager stopRangingBeaconsInRegion:self.rangingRegion];
+    [self stopRanging];
 }
 
 # pragma mark - push notifications
@@ -679,6 +681,11 @@
     
 }
 
+- (void)stopRanging
+{
+    [self.locationManager stopRangingBeaconsInRegion:self.rangingRegion];
+}
+
 #pragma mark - CLLocationManagerDelegate
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
 {
@@ -698,12 +705,18 @@
             }
             // Regardless, start ranging on Region 19
             [self.locationManager startRangingBeaconsInRegion:self.rangingRegion];
-            [self.locationManager performSelector:@selector(stopRangingBeaconsInRegion:) withObject:self.rangingRegion afterDelay:10.0];
-//            [self.locationManager stopRangingBeaconsInRegion:self.rangingRegion];
-            // Can we just start scanning here?
-            //            [self resetBluetooth];
-            //            [self startScanning];
-            //            [self wakeup];
+            // Kill any existing timeouts
+            if (self.rangingTimeout) {
+                [self.rangingTimeout invalidate];
+            }
+            // If we're in the background, don't do this forever
+            if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive) {
+                // Make a new timer
+                self.rangingTimeout = [NSTimer timerWithTimeInterval:BEACON_TIMEOUT target:self selector:@selector(stopRanging) userInfo:nil repeats:NO];
+                // Actually start the timer
+                [[NSRunLoop mainRunLoop] addTimer:self.rangingTimeout forMode:NSDefaultRunLoopMode];
+            }
+            
             if (DEBUG_BEACON){
                 NSLog(@"--- Entered region: %@", region);
 //                UILocalNotification *notice = [[UILocalNotification alloc] init];
