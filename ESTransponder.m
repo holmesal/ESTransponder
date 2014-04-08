@@ -16,8 +16,8 @@
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
-#define DEBUG_BEACON YES
-#define DEBUG_USERS NO
+#define DEBUG_BEACON NO
+#define DEBUG_USERS YES
 
 #define IS_RUNNING_ON_SIMULATOR NO
 
@@ -53,6 +53,7 @@
 @property (strong, nonatomic) Firebase *rootRef;
 @property (strong, nonatomic) Firebase *earshotUsersRef;
 //@property (strong, nonatomic) NSMutableDictionary *earshotUsers;
+@property (strong, nonatomic) NSTimer *filterTimer;
 
 // Oscillator
 @property NSInteger broadcastMode;
@@ -81,6 +82,8 @@
         [self startFlipping];
         // Chirp another beacona  few times to wake up other users
         [self chirpBeacon];
+        // Start the timer to filter the users
+        [self startFilterTimer];
         // Start a repeating timer to prune the in-range users, every 10 seconds
         [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(pruneUsers) userInfo:nil repeats:YES];
         // Listen for chirpBeacon events
@@ -141,6 +144,7 @@
 
 - (void)filterFirebaseUsers
 {
+    if (DEBUG_USERS) NSLog(@"Filtering firebase users!");
     // Store the current time
     NSDate *currentDate = [NSDate date];
     for (NSString *userKey in self.earshotUsers) {
@@ -166,6 +170,15 @@
             [self removeUser:userKey];
         }
     }
+}
+
+- (void)startFilterTimer
+{
+    if (self.filterTimer) {
+        [self.filterTimer invalidate];
+    }
+    self.filterTimer = [NSTimer timerWithTimeInterval:TIMEOUT target:self selector:@selector(filterFirebaseUsers) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:self.filterTimer forMode:NSDefaultRunLoopMode];
 }
 
 // Takes in a bluetooth or iBeacon user and adds it to earshotUsers
@@ -224,6 +237,8 @@
     [self stopFlipping];
     // Stop ranging beacons
     [self stopRanging];
+    // Pause the filter timer
+//    self.filterTimer
 }
 
 # pragma mark - push notifications
