@@ -12,15 +12,25 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.transponder = [[ESTransponder alloc] initWithEarshotID:@"65530" andFirebaseRootURL:@"https://bluetoothtest.firebaseio.com/"];
-    // Set the earshot id
-//    [self.transponder setEarshotID:@"alonso-set-this-id"];
-//    self.transponder.earshotID = [[UIDevice currentDevice] name];
-//    [self.transponder initFirebase:@"https://bluetoothtest.firebaseio.com/"];
-    [self.transponder startDetecting];
-    [self.transponder startBroadcasting];
+
+    // Initialize the transponder. Users will not yet be asked for Bluetooth and Location permissions.
+    self.transponder = [ESTransponder sharedInstance];
+    self.transponderID = self.transponder.transponderID;
+    NSLog(@"Transponder initialized. This device has ID %@", self.transponderID);
+    
+    // Listen for users-in-range updates
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUsers:) name:TransponderDidUpdateUsersInRange object:nil];
+    
+    // Start the transponder broadcasting and receiving. Users will be asked for permissions at this point.
+    [self.transponder startTransponder];
     
     return YES;
+}
+
+- (void)updateUsers:(NSNotification *)note
+{
+    NSMutableDictionary *transponderUsers = [note.userInfo objectForKey:@"transponderUsers"];
+    NSLog(@"Users in range updated: %@", transponderUsers);
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application

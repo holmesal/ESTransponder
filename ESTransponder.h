@@ -1,6 +1,6 @@
 //
 //  ESTransponder.h
-//  Earshot
+//  transponder
 //
 //  Created by Alonso Holmes on 4/1/14.
 //  Copyright (c) 2014 Buildco. All rights reserved.
@@ -12,50 +12,95 @@
 
 @interface ESTransponder : NSObject
 
-// TODO - make this a singleton
+//#define TIMEOUT 30.0 // How old should a user be before I consider them gone?
+
 //#define SINGLETON_IDENTIFIER @"CB284D88-5317-4FB4-9621-C5A3A49E6155"
 #define IDENTIFIER_STRING @"CB284D88-5317-4FB4-9621-C5A3A49E6155"
-#define IBEACON_UUID @"BC43DDCC-AF0C-4A69-9E75-4CDFF8FD5F63"
+//#define IBEACON_UUID @"BC43DDCC-AF0C-4A69-9E75-4CDFF8FD5F63"
+#define IDENTITY_BEACON_UUID @"A48639FC-CC79-4A8E-8E35-DF080B9C72E3"
 //#define IBEACON_UUID @"B9407F30-F5F8-466E-AFF9-25556B57FE6D"
+//#define kTransponderEventTransponderEnabled @"Bluetooth Enabled"
+//#define kTransponderEventTransponderDisabled @"Bluetooth Disabled"
+//#define kTransponderTriggerChirpBeacon @"chirpBeacon"
+//#define kTransponderEventCountUpdated @"WHO DAT"
 
-@property (strong, nonatomic) NSString *earshotID;
-@property (strong, nonatomic) NSMutableDictionary *earshotUsers;
-@property (nonatomic, readonly) BOOL isDetecting;
-@property (nonatomic, readonly) BOOL isBroadcasting;
-@property (nonatomic) BOOL peripheralManagerIsRunning;
+#define kTransponderEventTransponderUserDiscovered @"transponderDiscover"
+//nobody listens to the bellow
+//#define kTransponderEventNewUserDiscovered @"newUserDiscovered"
 
-// Init with an earshotID and a firebase URL
-- (id)initWithEarshotID:(NSString *)userID andFirebaseRootURL:(NSString *)firebaseURL;
+typedef enum
+{
+    ESTransponderStackStateUnknown = 0,
+    ESTransponderStackStateActive,
+    ESTransponderStackStateDisabled
+} ESTransponderStackState;
+
+
+@property (strong, nonatomic) NSString *transponderID;
+@property (nonatomic, readonly) BOOL isRunning;
+@property (strong, nonatomic) NSMutableDictionary *transponderUsers;
+
+//@property (nonatomic, readonly) BOOL isDetecting;
+//@property (nonatomic, readonly) BOOL isBroadcasting;
+
+
+//@property (assign, readonly) ESTransponderStackState stackIsRunning;
+
+
+// Init with an transponderID and a firebase URL
+//- (id)initWithTransponderID:(NSString *)userID andFirebaseRootURL:(NSString *)firebaseURL;
 
 // Init the firebase with a base URL
-- (void)initFirebase:(NSString *)baseURL;
+//- (void)initFirebase:(NSString *)baseURL;
 
-// Sets the earshot id, and starts advertising it.
-- (void)setEarshotID:(NSString *)earshotID;
+// Sets the transponder id, and starts advertising it.
+//- (void)setTransponderID:(NSString *)transponderID;
 
 // Starts detecting core bluetooth peripherals (service method)
-- (void)startDetecting;
+//- (void)startDetecting;
 
 // Starts broadcasting as a core bluetooth peripheral.
-// Make sure to set earshotID first.
-- (void)startBroadcasting;
+// Make sure to set transponderID first.
+//- (void)startBroadcasting;
 
 // Chirp the iBeacon for a few seconds to wake up others
-- (void)chirpBeacon;
+//- (void)chirpBeacon;
+
+// Shorthand for startDetecting, startBroadcasting, and chirpBeacon
+//- (void)startAwesome;
 
 // If you're doing bluetooth stuff, stop it. Just stop.
-- (void)resetBluetooth;
+//- (void)resetBluetooth;
 
-// Gets an array of earshot ids, one for each user currently in-range
+// Gets an array of transponder ids, one for each user currently in-range
 //- (NSArray *)getUsersInRange;
 
 // Gets the current location
-- (CLLocation *)getLocation;
+//- (CLLocation *)getLocation;
+
+
+
+
+
+// Methods API
+
+// Returns the shared ESTransponder instance
++ (ESTransponder *)sharedInstance;
+
+// Starts broadcasting and detecting, will ask for Bluetooth and Location permissions
+- (void)startTransponder;
+
+
 
 // Events API
-/*
- earshotDiscover - fired when a CoreBluetooth user is discovered. The user may or may not have a earshotID yet. Data contains the user that was just discovered, as well as a list of all the users that have been discovered so far
- 
- */
+
+// Emitted when the array of users in range is updated
+#define TransponderDidUpdateUsersInRange @"TransponderDidUpdateUsersInRange"
+
+// Emitted when a new user is discovered, but we're not sure who it is yet
+// This is useful for sending "User Nearby" notifications
+#define TransponderAnonymousUserDiscovered @"TransponderAnonymousUserDiscovered"
+
+
 
 @end

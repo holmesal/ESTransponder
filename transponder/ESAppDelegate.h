@@ -13,5 +13,6 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) ESTransponder *transponder;
+@property (strong, nonatomic) NSString *transponderID;
 
 @end
