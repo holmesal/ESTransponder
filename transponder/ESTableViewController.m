@@ -78,13 +78,9 @@
     
     // Configure the cell...
     NSDictionary *user = [self.users objectAtIndex:[indexPath row]];
-    NSString *userName = [user objectForKey:@"earshotID"];
-    if (userName == (NSString*)[NSNull null])
-    {
-        userName = @"Unknown name";
-    }
+    NSString *uuid = [user objectForKey:@"uuid"];
 //    NSLog(@"The user is %@",userName);
-    cell.textLabel.text = userName;
+    cell.textLabel.text = uuid;
     
     return cell;
 }

@@ -16,9 +16,6 @@
     // Initialize the transponder. Users will not yet be asked for Bluetooth and Location permissions.
     self.transponder = [ESTransponder sharedInstance];
     
-    // Show local notifications when the transponder stack is initialized. This is useful for testing behavior after device restarts or user-initated app kills.
-    self.transponder.showDebugNotifications = YES;
-    
     // Grab the ID, to associate with your own users.
     self.transponderID = self.transponder.transponderID;
     NSLog(@"Transponder initialized. This device has ID %@", self.transponderID);

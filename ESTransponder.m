@@ -115,8 +115,6 @@ static ESTransponder *sharedTransponder;
 {
     if (self = [super init])
     {
-        // By default, don't show any debug notifications
-        self.showDebugNotifications = NO;
         // Generate a new id, or use an existing one
         self.transponderID = [self getOrGenerateID];
         self.identifier = [CBUUID UUIDWithString:IDENTIFIER_STRING];
@@ -206,11 +204,10 @@ static ESTransponder *sharedTransponder;
 // Send a local notification for deep background debugging
 - (void)debugNote:(NSString *)text
 {
-    if (self.showDebugNotifications) {
+    if (SHOW_DEBUG_NOTIFICATIONS) {
         UILocalNotification *notice = [[UILocalNotification alloc] init];
         notice.alertBody = text;
         notice.alertAction = @"Open";
-        //        [[UIApplication sharedApplication] scheduleLocalNotification:notice];
         [[UIApplication sharedApplication] presentLocalNotificationNow:notice];
     }
 }
@@ -1123,7 +1120,7 @@ static ESTransponder *sharedTransponder;
     NSLog(@"Region monitoring failed with error: %@", [error localizedDescription]);
     
     // If we haven't already sent an error, send one
-    if (self.showDebugNotifications && !self.hasSentErrorNote) {
+    if (SHOW_DEBUG_NOTIFICATIONS && !self.hasSentErrorNote) {
         [self debugNote:@"iBeacons have broken down"];
     }
 }

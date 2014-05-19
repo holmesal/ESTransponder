@@ -26,6 +26,8 @@
 //nobody listens to the bellow
 //#define kTransponderEventNewUserDiscovered @"newUserDiscovered"
 
+#define SHOW_DEBUG_NOTIFICATIONS YES
+
 typedef enum
 {
     ESTransponderStackStateUnknown = 0,
