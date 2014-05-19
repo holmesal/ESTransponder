@@ -8,10 +8,11 @@
 
 #import "ESTableViewController.h"
 #import <Firebase/Firebase.h>
+#import "ESTransponder.h"
 
 @interface ESTableViewController ()
 
-@property (strong, nonatomic) NSMutableDictionary *users;
+@property (strong, nonatomic) NSMutableArray *users;
 
 @end
 
@@ -32,24 +33,10 @@
     [super viewDidLoad];
     
     NSLog(@"Registering!");
-    self.users = [[NSMutableDictionary alloc] init];
+    self.users = [[NSMutableArray alloc] init];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updateTable:)
-                                                 name:@"earshotDiscover"
-                                               object:nil];
-    
-//    [[NSNotificationCenter defaultCenter] addObserverForName:@"earshotDiscover" object:nil queue:nil usingBlock:^(NSNotification *note) {
-//        NSLog(@"OMG GOT NOTE");
-//    }];
-//    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
-//    [self.note addObserver:self selector:@selector(updateTable:) name:@"earshotDiscover" object:nil];
+    // Listen for users-in-range updates
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTable:) name:TransponderDidUpdateUsersInRange object:nil];
     
 }
 
@@ -57,7 +44,7 @@
 {
 //    NSLog(@"Got notification!");
 //    NSLog(@"%@",note);
-    self.users = [note.userInfo objectForKey:@"earshotUsers"];
+    self.users = [note.userInfo objectForKey:@"transponderUsers"];
     [self.tableView reloadData];
 }
 
@@ -81,7 +68,7 @@
 #warning Incomplete method implementation.
     // Return the number of rows in the section.
 
-    return [[self.users allKeys] count];
+    return [self.users count];
 }
 
 
@@ -90,7 +77,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     
     // Configure the cell...
-    NSDictionary *user = [self.users objectForKey:[[self.users allKeys] objectAtIndex:[indexPath row]]];
+    NSDictionary *user = [self.users objectAtIndex:[indexPath row]];
     NSString *userName = [user objectForKey:@"earshotID"];
     if (userName == (NSString*)[NSNull null])
     {

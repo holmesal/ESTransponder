@@ -24,7 +24,8 @@
 #define DEBUG_TIMEOUTS NO
 #define DEBUG_NOTIFICATIONS NO
 #define IS_RUNNING_ON_SIMULATOR NO
-#define DEBUG_SHOW_NOTIFS YES
+
+#define TIMEOUT 30.0 // How old should a user be before I consider them gone?
 
 #define MAX_BEACON 19 // How many beacons to use (IOS max 19)
 #define REPORTING_INTERVAL 12.0 // How often to report to firebase
@@ -48,6 +49,9 @@
 // Mixpanel
 //@property (strong, nonatomic) Mixpanel *mixpanel;
 
+@property (nonatomic, readonly) BOOL isDetecting;
+@property (nonatomic, readonly) BOOL isBroadcasting;
+
 // Beacon broadcasting
 @property NSInteger flipCount;
 @property BOOL currentlyChirping;
@@ -63,11 +67,12 @@
 @property (strong, nonatomic) NSArray *regionUUIDS;
 @property (strong, nonatomic) CLBeaconRegion *rangingRegion;
 @property (strong, nonatomic) NSTimer *rangingTimeout;
+@property (nonatomic, readonly) BOOL hasSentErrorNote;
 
 // Firebase-synced users array
 @property (strong, nonatomic) Firebase *rootRef;
-@property (strong, nonatomic) Firebase *transponderUsersRef;
-//@property (strong, nonatomic) NSMutableDictionary *transponderUsers;
+@property (strong, nonatomic) Firebase *earshotUsersRef;
+@property (strong, nonatomic) NSMutableDictionary *earshotUsers;
 @property (strong, nonatomic) NSTimer *filterTimer;
 @property (strong, nonatomic) NSMutableDictionary *lastReported;
 @property (assign, nonatomic) BOOL actuallyRemove;
@@ -89,7 +94,7 @@
 @implementation ESTransponder
 @synthesize transponderID;
 //@synthesize peripheralManagerIsRunning;
-@synthesize stackIsRunning;
+@synthesize isRunning;
 
 static ESTransponder *sharedTransponder;
 +(ESTransponder *)sharedInstance
@@ -110,10 +115,13 @@ static ESTransponder *sharedTransponder;
 {
     if (self = [super init])
     {
+        // By default, don't show any debug notifications
+        self.showDebugNotifications = NO;
         // Generate a new id, or use an existing one
         self.transponderID = [self getOrGenerateID];
         self.identifier = [CBUUID UUIDWithString:IDENTIFIER_STRING];
         self.bluetoothUsers = [[NSMutableDictionary alloc] init];
+        self.transponderUsers = [[NSArray alloc] init];
         self.lastReported = [[NSMutableDictionary alloc] init];
         self.seen = [[NSMutableArray alloc] init];
         //        self.mixpanel = [Mixpanel sharedInstance];
@@ -158,7 +166,7 @@ static ESTransponder *sharedTransponder;
         //        [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(pruneUsers) userInfo:nil repeats:YES];
         // Start a repeating timer to broadcast as an iBeacon, every 30 seconds
         // Listen for chirpBeacon events
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chirpBeacon) name:kTransponderTriggerChirpBeacon object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chirpBeacon) name:kTransponderTriggerChirpBeacon object:nil];
         // Listen for app sleep events
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterForeground) name:UIApplicationDidBecomeActiveNotification object:nil];
         // Listen for app wakeup events
@@ -198,7 +206,7 @@ static ESTransponder *sharedTransponder;
 // Send a local notification for deep background debugging
 - (void)debugNote:(NSString *)text
 {
-    if (DEBUG_SHOW_NOTIFS) {
+    if (self.showDebugNotifications) {
         UILocalNotification *notice = [[UILocalNotification alloc] init];
         notice.alertBody = text;
         notice.alertAction = @"Open";
@@ -229,7 +237,7 @@ static ESTransponder *sharedTransponder;
             if (lastSeen > TIMEOUT)
             {
                 if (DEBUG_USERS) NSLog(@"Removing user: %@",userBeacon);
-                // Remove from transponderUsers, if it's actually in there
+                // Remove from earshotUsers, if it's actually in there
                 //            if ([userBeacon objectForKey:@"transponderID"] != [NSNull null]) {
                 //                [self removeUser:[userBeacon objectForKey:@"transponderID"]];
                 //            }
@@ -247,25 +255,27 @@ static ESTransponder *sharedTransponder;
 
 - (void)initFirebase:(NSString *)baseURL
 {
-    self.transponderUsers = [[NSMutableDictionary alloc] init];
+    self.earshotUsers = [[NSMutableDictionary alloc] init];
     self.rootRef = [[Firebase alloc] initWithUrl:baseURL];
-    self.transponderUsersRef = [[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.transponderID] childByAppendingPath:@"tracking"];
-    [self.transponderUsersRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+    self.earshotUsersRef = [[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.transponderID] childByAppendingPath:@"tracking"];
+    [self.earshotUsersRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
      {
-         // Update the locally-stored transponderUsers array
+         // Update the locally-stored earshotUsers array
          NSLog(@"Got data from firebase");
          NSLog(@"%@",snapshot.value);
          if (snapshot.value != [NSNull null]){
-             self.transponderUsers = [NSMutableDictionary dictionaryWithDictionary:snapshot.value];
+             self.earshotUsers = [NSMutableDictionary dictionaryWithDictionary:snapshot.value];
          } else
          {
-             self.transponderUsers = [[NSMutableDictionary alloc] init];
+             self.earshotUsers = [[NSMutableDictionary alloc] init];
              self.lastReported = [[NSMutableDictionary alloc] init];
          }
          // Filter the users based on timeout
          [self filterFirebaseUsers];
+         // Emit the updated users
+         [self emitUsers];
          // The app icon badge listens to these events
-         [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventCountUpdated object:self userInfo:@{@"count":[NSNumber numberWithLong:[[self.transponderUsers allKeys] count]]}];
+//         [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventCountUpdated object:self userInfo:@{@"count":[NSNumber numberWithLong:[[self.earshotUsers allKeys] count]]}];
      }];
     
     //    self.seenRef = [[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.transponderID] childByAppendingPath:@"seen"];
@@ -279,6 +289,28 @@ static ESTransponder *sharedTransponder;
     //    }];
 }
 
+- (void)emitUsers
+{
+    // Filter the current users into an array
+    NSMutableArray *formatted = [[NSMutableArray alloc] init];
+    
+    for (NSString *uuid in [self.earshotUsers allKeys])
+    {
+        NSNumber *lastSeen = [self.earshotUsers objectForKey:uuid];
+        NSDictionary *formattedUser = @{@"uuid": uuid,
+                                        @"lastSeen": lastSeen};
+        [formatted addObject:formattedUser];
+    }
+    
+    NSArray *output = [NSArray arrayWithArray:formatted];
+    
+    // Store the users
+    self.transponderUsers = output;
+    
+    // Emit the users
+    [[NSNotificationCenter defaultCenter] postNotificationName:TransponderDidUpdateUsersInRange object:self userInfo:@{@"transponderUsers":output}];
+}
+
 - (void)filterFirebaseUsers
 {
     if (DEBUG_USERS) NSLog(@"Filtering firebase users with actuallyRemove = %d",self.actuallyRemove);
@@ -286,9 +318,9 @@ static ESTransponder *sharedTransponder;
     NSDate *currentDate = [NSDate date];
     // Track whether a user to remove was found
     BOOL removeUserInTheFuture = NO;
-    for (NSString *userKey in self.transponderUsers) {
+    for (NSString *userKey in self.earshotUsers) {
         // If the timeout is too old, clear it out
-        NSNumber *timestampNumber = [self.transponderUsers objectForKey:userKey];
+        NSNumber *timestampNumber = [self.earshotUsers objectForKey:userKey];
         // Protect against weird values here
         if ([timestampNumber isKindOfClass:[NSNumber class]]) {
             long timestamp = [timestampNumber longValue];
@@ -342,14 +374,14 @@ static ESTransponder *sharedTransponder;
     [[NSRunLoop mainRunLoop] addTimer:self.filterTimer forMode:NSDefaultRunLoopMode];
 }
 
-// Takes in a bluetooth or iBeacon user and adds it to transponderUsers
+// Takes in a bluetooth or iBeacon user and adds it to earshotUsers
 - (void)addUser:(NSString *)userID
 {
     //    NSLog(@"Adding user to firebase: %@",userID);
     //    // Get the rounded date/time
     //    uint rounded = [self roundTime:[[NSDate date] timeIntervalSince1970]];
     //    // Add the user for yourself
-    //    [[self.transponderUsersRef childByAppendingPath:userID] setValue:[[NSNumber alloc] initWithInt:rounded]];
+    //    [[self.earshotUsersRef childByAppendingPath:userID] setValue:[[NSNumber alloc] initWithInt:rounded]];
     //    // Add yourself for the user
     //    [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.transponderID] setValue:[[NSNumber alloc] initWithInt:rounded]];
     //    [self.lastReported setObject:[[NSNumber alloc] initWithDouble:now] forKey:userID];
@@ -364,7 +396,7 @@ static ESTransponder *sharedTransponder;
     {
         if(DEBUG_USERS) NSLog(@"Adding/updating user on firebase: %@",userID);
         // Add the user for yourself
-        [[self.transponderUsersRef childByAppendingPath:userID] setValue:[[NSNumber alloc] initWithInt:now]];
+        [[self.earshotUsersRef childByAppendingPath:userID] setValue:[[NSNumber alloc] initWithInt:now]];
         // Add yourself for the user
         [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.transponderID] setValue:[[NSNumber alloc] initWithInt:now]];
         [self.lastReported setObject:[[NSNumber alloc] initWithInt:now] forKey:userID];
@@ -404,7 +436,7 @@ static ESTransponder *sharedTransponder;
     
     if (application.applicationState == UIApplicationStateActive) {
         // Remove the user for yourself
-        [[self.transponderUsersRef childByAppendingPath:userID] removeValue];
+        [[self.earshotUsersRef childByAppendingPath:userID] removeValue];
     }
     // Remove yourself for the user
     //    [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.transponderID] removeValue];
@@ -509,7 +541,7 @@ static ESTransponder *sharedTransponder;
 {
     // start broadcasting if it's stopped
     if (!self.peripheralManager) {
-        [self debugNote:@"Transponder is booting bluetooth"];
+        [self debugNote:@"Transponder is booting bluetooth + iBeacon"];
         self.peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self queue:nil];
     }
 }
@@ -530,7 +562,7 @@ static ESTransponder *sharedTransponder;
     self.bluetoothAdvertisingData = @{CBAdvertisementDataServiceUUIDsKey:@[self.identifier], CBAdvertisementDataLocalNameKey:self.transponderID};
     
     // Start advertising over BLE
-    [self debugNote:@"Transponder is rocking the bluetooths"];
+    [self debugNote:@"Transponder is broadcasting"];
     [self.peripheralManager startAdvertising:self.bluetoothAdvertisingData];
 }
 
@@ -590,11 +622,11 @@ static ESTransponder *sharedTransponder;
     if (DEBUG_CENTRAL) NSLog(@"%@",self.bluetoothUsers);
     
     // Notify peeps that an transponder user was discovered
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventTransponderUserDiscovered
-                                                        object:self
-                                                      userInfo:@{@"user":existingUser,
-                                                                 @"identifiedUsers":self.transponderUsers,
-                                                                 @"bluetoothUsers":self.bluetoothUsers}];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventTransponderUserDiscovered
+//                                                        object:self
+//                                                      userInfo:@{@"user":existingUser,
+//                                                                 @"identifiedUsers":self.earshotUsers,
+//                                                                 @"bluetoothUsers":self.bluetoothUsers}];
     
 }
 
@@ -669,7 +701,7 @@ static ESTransponder *sharedTransponder;
 - (void)chirpBeacon
 {
     NSLog(@"chirpBeacon called!");
-    NSLog(@"Is stack running? %u", [self stackIsRunning]);
+    NSLog(@"Is stack running? %u", [self isRunning]);
     UIApplication *application = [UIApplication sharedApplication];
     if ([application applicationState] == UIApplicationStateActive) {
         
@@ -764,7 +796,7 @@ static ESTransponder *sharedTransponder;
         [self flipState];
     } else {
         // You're in the background, so just start broadcasting on BLE
-        [self debugNote:@"Transponder is rocking the BLE."];
+        [self debugNote:@"Transponder is broadcasting in the background."];
         [self resetBluetooth];
     }
     
@@ -1028,7 +1060,7 @@ static ESTransponder *sharedTransponder;
     }
 }
 
-- (ESTransponderStackState)stackIsRunning
+- (ESTransponderStackState)isRunning
 {
     if (self.coreLocationWasTried && self.bluetoothWasTried)
     {
@@ -1060,7 +1092,7 @@ static ESTransponder *sharedTransponder;
                 [reportStackFailureTimer invalidate];
                 reportStackFailureTimer = nil;
             }
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventTransponderEnabled object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:TransponderEnabled object:nil];
         } else
         {
             if (!reportStackFailureTimer)
@@ -1077,7 +1109,7 @@ static ESTransponder *sharedTransponder;
     [reportStackFailureTimer invalidate];
     reportStackFailureTimer = nil;
     //emit the failure notification
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventTransponderDisabled object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:TransponderDisabled object:nil];
 }
 
 -(CLLocation*)getLocation
@@ -1090,6 +1122,10 @@ static ESTransponder *sharedTransponder;
     NSLog(@"Region monitoring failed for region: %@", region);
     NSLog(@"Region monitoring failed with error: %@", [error localizedDescription]);
     
+    // If we haven't already sent an error, send one
+    if (self.showDebugNotifications && !self.hasSentErrorNote) {
+        [self debugNote:@"iBeacons have broken down"];
+    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
@@ -1137,13 +1173,13 @@ static ESTransponder *sharedTransponder;
 
 {
     // The app icon badge listens to these events
-    if ([[self.transponderUsers allKeys] count] == 0){
+    if ([[self.earshotUsers allKeys] count] == 0){
         // Badge the number of bluetooth users
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventCountUpdated object:self userInfo:@{@"count":[NSNumber numberWithLong:[[self.bluetoothUsers allKeys] count]]}];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventCountUpdated object:self userInfo:@{@"count":[NSNumber numberWithLong:[[self.bluetoothUsers allKeys] count]]}];
         //        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventCountUpdated object:self userInfo:@{@"count":@1}];
     } else {
         // Badge the number of users tracked via firebase
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventCountUpdated object:self userInfo:@{@"count":[NSNumber numberWithLong:[[self.transponderUsers allKeys] count]]}];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventCountUpdated object:self userInfo:@{@"count":[NSNumber numberWithLong:[[self.earshotUsers allKeys] count]]}];
     }
     // Only do this if the app is in the background
     //    NSLog(@"Current app state is %ld",[[UIApplication sharedApplication] applicationState]);
@@ -1170,6 +1206,9 @@ static ESTransponder *sharedTransponder;
                 self.lastNotificationEvent = [NSDate date];
                 // Track this via mixpanel
 //                [self.mixpanel track:@"Notified of user nearby" properties:@{}];
+                // Suggest that the app notify a user
+                
+                
             } else{
                 NSLog(@"It has only been %f seconds of the %f second notification timeout - ignoring notification call.", howLong, NOTIFICATION_TIMEOUT);
                 [self debugNote:@"NOT sending disc note - timeout too short"];

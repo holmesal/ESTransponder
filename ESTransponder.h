@@ -12,8 +12,6 @@
 
 @interface ESTransponder : NSObject
 
-//#define TIMEOUT 30.0 // How old should a user be before I consider them gone?
-
 //#define SINGLETON_IDENTIFIER @"CB284D88-5317-4FB4-9621-C5A3A49E6155"
 #define IDENTIFIER_STRING @"CB284D88-5317-4FB4-9621-C5A3A49E6155"
 //#define IBEACON_UUID @"BC43DDCC-AF0C-4A69-9E75-4CDFF8FD5F63"
@@ -35,16 +33,12 @@ typedef enum
     ESTransponderStackStateDisabled
 } ESTransponderStackState;
 
+@property (assign, readonly) ESTransponderStackState isRunning;
+@property (assign, nonatomic) BOOL showDebugNotifications;
+
 
 @property (strong, nonatomic) NSString *transponderID;
-@property (nonatomic, readonly) BOOL isRunning;
-@property (strong, nonatomic) NSMutableDictionary *transponderUsers;
-
-//@property (nonatomic, readonly) BOOL isDetecting;
-//@property (nonatomic, readonly) BOOL isBroadcasting;
-
-
-//@property (assign, readonly) ESTransponderStackState stackIsRunning;
+@property (strong, nonatomic) NSArray *transponderUsers;
 
 
 // Init with an transponderID and a firebase URL
@@ -101,6 +95,11 @@ typedef enum
 // This is useful for sending "User Nearby" notifications
 #define TransponderAnonymousUserDiscovered @"TransponderAnonymousUserDiscovered"
 
+// Emitted when Transponder is successfully initialized and running
+#define TransponderEnabled @"TransponderEnabled"
+
+// Emitted if Transponder fails to start, for example, because a user denies permissions
+#define TransponderDisabled @"TransponderDisabled"
 
 
 @end

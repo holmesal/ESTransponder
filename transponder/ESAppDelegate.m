@@ -15,13 +15,18 @@
 
     // Initialize the transponder. Users will not yet be asked for Bluetooth and Location permissions.
     self.transponder = [ESTransponder sharedInstance];
+    
+    // Show local notifications when the transponder stack is initialized. This is useful for testing behavior after device restarts or user-initated app kills.
+    self.transponder.showDebugNotifications = YES;
+    
+    // Grab the ID, to associate with your own users.
     self.transponderID = self.transponder.transponderID;
     NSLog(@"Transponder initialized. This device has ID %@", self.transponderID);
     
     // Listen for users-in-range updates
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUsers:) name:TransponderDidUpdateUsersInRange object:nil];
     
-    // Start the transponder broadcasting and receiving. Users will be asked for permissions at this point.
+    // Start the transponder broadcasting and receiving. Users will be asked for permissions at this point, if they haven't already accepted them.
     [self.transponder startTransponder];
     
     return YES;
@@ -29,7 +34,8 @@
 
 - (void)updateUsers:(NSNotification *)note
 {
-    NSMutableDictionary *transponderUsers = [note.userInfo objectForKey:@"transponderUsers"];
+    // Users are returned in an array
+    NSArray *transponderUsers = [note.userInfo objectForKey:@"users"];
     NSLog(@"Users in range updated: %@", transponderUsers);
 }
 							
