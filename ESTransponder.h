@@ -90,12 +90,21 @@ typedef enum
 
 // Events API
 
-// Emitted when the array of users in range is updated
+// Emitted when the array of users in range is updated. This is the main event that you should listen to.
+// userInfo.transponderUsers is an array of dictionaries, each containing transponder uuid and last seen timestamp (unix)
 #define TransponderDidUpdateUsersInRange @"TransponderDidUpdateUsersInRange"
 
 // Emitted when a new user is discovered, but we're not sure who it is yet
-// This is useful for sending "User Nearby" notifications
+// This is useful for sending "User Nearby" notifications, if you're throttling them yourself
 #define TransponderAnonymousUserDiscovered @"TransponderAnonymousUserDiscovered"
+
+// Emitted when a new user is discovered, and that user has an ID
+// userInfo.uuid is the transponder uuid of the discovered user
+#define TransponderUserDiscovered @"TransponderUserDiscovered"
+
+// Emitted when Transponder thinks you should send a "YOUR-APP user nearby!" local notification
+// Based on a combination of (coarse, cell-based, low-power) geolocation and a 20 minute timeout.
+#define TransponderSuggestsDiscoveryNotification @"TransponderSuggestsDiscoveryNotification"
 
 // Emitted when Transponder is successfully initialized and running
 #define TransponderEnabled @"TransponderEnabled"

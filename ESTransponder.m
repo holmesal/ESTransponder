@@ -469,40 +469,6 @@ static ESTransponder *sharedTransponder;
     //    self.filterTimer
 }
 
-# pragma mark - push notifications
-- (void)wakeup
-{
-    // Only do this if the app is in the background
-    //    NSLog(@"Current app state is %ld",[[UIApplication sharedApplication] applicationState]);
-    UIApplication *app = [UIApplication sharedApplication];
-    if ([app applicationState] == UIApplicationStateBackground) {
-        NSLog(@"App is in the background!");
-        // If there aren't any user notifications, add a new transponder notification
-        NSArray *notificationArray = [app scheduledLocalNotifications];
-        NSLog(@"notificationArray count is %d", [notificationArray count]);
-        //        if ([notificationArray count] != 0) {
-        //            // Delete all the existing notifications
-        //            NSLog(@"Deleting local notifications");
-        //            [app cancelAllLocalNotifications];
-        ////            for (UILocalNotification *toDelete in notificationArray) {
-        ////                app cancelAllLocalNotifications
-        ////            }
-        //        }
-        //        [app cancelAllLocalNotifications];
-        // Add a new notifications
-        UILocalNotification *notice = [[UILocalNotification alloc] init];
-        notice.alertBody = [NSString stringWithFormat:@"Shortwave users nearby."];
-        notice.alertAction = @"Converse";
-        [app scheduleLocalNotification:notice];
-    } else
-    {
-        NSLog(@"App is not in the background - ignoring wakeup call.");
-    }
-    // If there aren't any user notifications, add a new transponder notification
-    // TODO - check if there are already notifications
-    // If there are currently notifications, add this one and then delete it right away
-}
-
 # pragma mark - core bluetooth
 
 - (void)startDetecting
@@ -613,7 +579,9 @@ static ESTransponder *sharedTransponder;
     {
         //        NSLog(@"%@ addUser %@ <centralManager:didDiscoverPeripheral:advertisementData:RSSI:>", [FCUser owner].id, userID);
         [self addUser:userID];
-        
+        [self sendUserDiscoverEvent:userID];
+    } else {
+        [self sendAnonymousUserDiscoverEvent];
     }
     
     if (DEBUG_CENTRAL) NSLog(@"%@",self.bluetoothUsers);
@@ -1193,12 +1161,13 @@ static ESTransponder *sharedTransponder;
             if (isnan(howLong) || howLong > NOTIFICATION_TIMEOUT) {
                 NSLog(@"Sending a local discover notification!");
                 // Cancel all of the existing notifications
-                [app cancelAllLocalNotifications];
+//                [app cancelAllLocalNotifications];
                 // Add a new notification
-                UILocalNotification *notice = [[UILocalNotification alloc] init];
-                notice.alertBody = [NSString stringWithFormat:@"Shortwave users nearby!"];
-                notice.alertAction = @"Converse";
-                [app scheduleLocalNotification:notice];
+//                UILocalNotification *notice = [[UILocalNotification alloc] init];
+//                notice.alertBody = [NSString stringWithFormat:@"Shortwave users nearby!"];
+//                notice.alertAction = @"Converse";
+//                [app scheduleLocalNotification:notice];
+                [[NSNotificationCenter defaultCenter] postNotificationName:TransponderSuggestsDiscoveryNotification object:nil];
                 // Update the date we use for the notification timeout
                 self.lastNotificationEvent = [NSDate date];
                 // Track this via mixpanel
@@ -1218,6 +1187,19 @@ static ESTransponder *sharedTransponder;
     {
         NSLog(@"App is not in the background - ignoring notication call.");
     }
+}
+
+# pragma mark - transponder events
+- (void)sendUserDiscoverEvent:(NSString *)uuid
+{
+    NSDictionary *userInfo = @{@"uuid": uuid};
+    [[NSNotificationCenter defaultCenter] postNotificationName:TransponderUserDiscovered object:nil userInfo:userInfo];
+}
+
+- (void)sendAnonymousUserDiscoverEvent
+{
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:TransponderAnonymousUserDiscovered object:nil];
 }
 
 -(void)dealloc

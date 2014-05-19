@@ -23,6 +23,9 @@
     // Listen for users-in-range updates
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUsers:) name:TransponderDidUpdateUsersInRange object:nil];
     
+    // Listen for discovery notification suggestions. You can also listen to `TransponderUserDiscovered` and `TransponderAnonymousUserDiscovered` and roll your own time-and location filtering.
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(sendDiscoverNotification) name:TransponderSuggestsDiscoveryNotification object:nil];
+    
     // Start the transponder broadcasting and receiving. Users will be asked for permissions at this point, if they haven't already accepted them.
     [self.transponder startTransponder];
     
@@ -35,7 +38,15 @@
     NSArray *transponderUsers = [note.userInfo objectForKey:@"users"];
     NSLog(@"Users in range updated: %@", transponderUsers);
 }
-							
+
+- (void)sendDiscoverNotification
+{
+    UILocalNotification *notice = [[UILocalNotification alloc] init];
+    notice.alertBody = [NSString stringWithFormat:@"Transponder users nearby!"];
+    notice.alertAction = @"Converse";
+    [[UIApplication sharedApplication] presentLocalNotificationNow:notice];
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
