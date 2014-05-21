@@ -19,7 +19,7 @@
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
-#define DEBUG_BEACON NO
+#define DEBUG_BEACON YES
 #define DEBUG_USERS NO
 #define DEBUG_TIMEOUTS NO
 #define DEBUG_NOTIFICATIONS NO
@@ -125,25 +125,45 @@ static ESTransponder *sharedTransponder;
         //        self.mixpanel = [Mixpanel sharedInstance];
         // Set up the allowed beacon regions
         // What are the uuids?
-        self.regionUUIDS = @[      @"DDE6C09F-345B-4FC2-80C1-C27977EB35A6",
-                                   @"E20DF868-0B06-4361-85DE-EE57A57CAA5F",
-                                   @"BCEA644E-3B51-4E6C-8B72-ED204EC5FA36",
-                                   @"9CA603ED-7A5D-4F2F-BBB6-70AAC0050C7E",
-                                   @"A97C54AA-A7B8-4AED-8542-12BCF12D97DD",
-                                   @"6B6ABB05-46D1-4466-BCAC-D6F70CBE1348",
-                                   @"F1229A67-42EB-40CB-83F0-32385074F705",
-                                   @"259CB377-2CB2-476B-B59A-326CB3315B47",
-                                   @"C0A151D2-EC1D-4547-87D8-4C73E94252D3",
-                                   @"D64BB228-C3C1-4A16-A1A5-C84785DAAD7B",
-                                   @"2DC4D09C-5846-463D-9FFC-BDFE414417BF",
-                                   @"5AAFB50C-F795-4818-9433-7197C517B1E0",
-                                   @"155E22AE-AE03-4A65-B665-71D9E417146A",
-                                   @"19D0C85F-B85E-4DE1-9449-498F62E443FD",
-                                   @"554EBF21-D361-41F0-8B93-34E40ABB090B",
-                                   @"B8F2B4F6-2771-4B05-BB8B-CBA06A08CC74",
-                                   @"43AF147A-2EC5-4357-AD56-AB36B145C2F5",
-                                   @"A7CF1269-E65C-4BED-9395-183761DE02DB",
-                                   @"9C9FA6DD-B314-429E-A587-37EAA0C5D6B7"];
+//        self.regionUUIDS = @[      @"DDE6C09F-345B-4FC2-80C1-C27977EB35A6", // Shortwave uuids
+//                                   @"E20DF868-0B06-4361-85DE-EE57A57CAA5F",
+//                                   @"BCEA644E-3B51-4E6C-8B72-ED204EC5FA36",
+//                                   @"9CA603ED-7A5D-4F2F-BBB6-70AAC0050C7E",
+//                                   @"A97C54AA-A7B8-4AED-8542-12BCF12D97DD",
+//                                   @"6B6ABB05-46D1-4466-BCAC-D6F70CBE1348",
+//                                   @"F1229A67-42EB-40CB-83F0-32385074F705",
+//                                   @"259CB377-2CB2-476B-B59A-326CB3315B47",
+//                                   @"C0A151D2-EC1D-4547-87D8-4C73E94252D3",
+//                                   @"D64BB228-C3C1-4A16-A1A5-C84785DAAD7B",
+//                                   @"2DC4D09C-5846-463D-9FFC-BDFE414417BF",
+//                                   @"5AAFB50C-F795-4818-9433-7197C517B1E0",
+//                                   @"155E22AE-AE03-4A65-B665-71D9E417146A",
+//                                   @"19D0C85F-B85E-4DE1-9449-498F62E443FD",
+//                                   @"554EBF21-D361-41F0-8B93-34E40ABB090B",
+//                                   @"B8F2B4F6-2771-4B05-BB8B-CBA06A08CC74",
+//                                   @"43AF147A-2EC5-4357-AD56-AB36B145C2F5",
+//                                   @"A7CF1269-E65C-4BED-9395-183761DE02DB",
+//                                   @"9C9FA6DD-B314-429E-A587-37EAA0C5D6B7"];
+        
+        self.regionUUIDS = @[      @"53324C49-54F5-433D-B87D-3350578F144D",
+                                   @"EC3488B8-2EE0-4EA8-9E0E-A96973B50DF8",
+                                   @"82BB21D5-937A-484A-9682-A6869ADA3E86",
+                                   @"BB4EBDA7-EDE6-4704-98B3-841A356637B1",
+                                   @"FBAEE41C-CC46-4DDA-9778-8F8C2A8D9D50",
+                                   @"E1A5EB08-CAC5-4039-9FEA-C7325AE79886",
+                                   @"7999BD85-4CAE-4009-9664-0BC044030E7B",
+                                   @"C5B35AC6-0E03-4D2B-B871-71718A10ADBE",
+                                   @"0729808A-29FB-4EAF-BF20-2665EDBAB24D",
+                                   @"A9B7573B-04FF-46A7-A724-84325E89F506",
+                                   @"88A38AA7-1C3D-4FB4-B798-F60F7DCBA445",
+                                   @"AC1B7CE1-F1D0-4694-800E-1185CDAC73FF",
+                                   @"65FA6EAB-2F77-43FF-902E-94934B3A629C",
+                                   @"47D4A312-824B-4641-AF22-BDE0D8A93F97",
+                                   @"FC1AF90C-24D3-4BDE-855A-068976FC9F7E",
+                                   @"DC9466FE-EBA1-4EBB-BC56-8F5397C1590B",
+                                   @"3B9EB05B-5865-413F-A61B-3AA78721CFF5",
+                                   @"A2F510C4-B75D-4F92-8E9B-242E227B1C0C",
+                                   @"911C9FE9-3FF4-4768-A76F-01864C35B6F7"];
         // Setup the firebase
         [self initFirebase:@"https://transponder.firebaseio.com"];
         // Create the identity iBeacon

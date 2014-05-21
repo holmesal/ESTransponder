@@ -26,6 +26,8 @@
     // Listen for discovery notification suggestions. You can also listen to `TransponderUserDiscovered` and `TransponderAnonymousUserDiscovered` and roll your own time-and location filtering.
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(sendDiscoverNotification) name:TransponderSuggestsDiscoveryNotification object:nil];
     
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(didDiscoverAnonymousUser) name:TransponderAnonymousUserDiscovered object:nil];
+    
     // Start the transponder broadcasting and receiving. Users will be asked for permissions at this point, if they haven't already accepted them.
     [self.transponder startTransponder];
     
@@ -35,8 +37,22 @@
 - (void)updateUsers:(NSNotification *)note
 {
     // Users are returned in an array
-    NSArray *transponderUsers = [note.userInfo objectForKey:@"users"];
+    NSArray *transponderUsers = [note.userInfo objectForKey:@"transponderUsers"];
     NSLog(@"Users in range updated: %@", transponderUsers);
+    
+    if ([transponderUsers count] == 0) {
+        // Badge the app icon
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    }
+}
+
+- (void)didDiscoverAnonymousUser
+{
+    NSLog(@"Discovered anonymous user");
+    NSLog(@"ok");
+    
+    // Badge the app icon
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
 }
 
 - (void)sendDiscoverNotification
