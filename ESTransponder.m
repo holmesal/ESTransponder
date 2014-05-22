@@ -16,6 +16,7 @@
 #import "CBUUID+Ext.h"
 
 #import "TransponderViewController.h"
+#import "Math.h"
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
@@ -611,6 +612,8 @@ static ESTransponder *sharedTransponder;
     {
         //        NSLog(@"%@ addUser %@ <centralManager:didDiscoverPeripheral:advertisementData:RSSI:>", [FCUser owner].id, userID);
         [self addUser:userID];
+        // Add the sighting to the post queue
+        [self sightedBroadcaster:userID withRSSI:RSSI];
         [self sendUserDiscoverEvent:userID];
     } else {
         [self sendAnonymousUserDiscoverEvent];
@@ -1053,6 +1056,7 @@ static ESTransponder *sharedTransponder;
         [self sendNonanonymousNotification:userID];
         
 //        if (DEBUG_BEACON) NSLog(@"%@ addUser %@ <locationManager:didRangeBeacons:inRegion:>", [FCUser owner].id, userID);
+        [self sightedBroadcaster:userID withRSSI:[NSNumber numberWithInteger:beacon.rssi]];
         [self addUser:userID];
     }
 }
@@ -1232,6 +1236,21 @@ static ESTransponder *sharedTransponder;
 {
     
     [[NSNotificationCenter defaultCenter] postNotificationName:TransponderAnonymousUserDiscovered object:nil];
+}
+
+# pragma mark - post queue
+- (void)sightedBroadcaster:(NSString *)broadcasterID withRSSI:(NSNumber *)rssi
+{
+    // Build the sighting object and add the timestamp
+    NSDictionary *sighting = @{@"broadcaster": broadcasterID,
+                               @"sighter": self.transponderID,
+                               @"rssi": rssi,
+                               @"timestamp": [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]
+                               };
+    NSLog(@"Adding sighting: %@", sighting);
+    
+    // Add it to the queue
+    // TODO
 }
 
 -(void)dealloc
