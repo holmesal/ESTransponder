@@ -8,6 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		96E1F78259E146EF85707B38 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 64D605A682624C319C652A2D /* libPods.a */; };
+		AAD6485A192E757800B18B73 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD64859192E757800B18B73 /* ViewController.m */; };
+		AAD6485E192E83BE00B18B73 /* TransponderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD6485C192E83BE00B18B73 /* TransponderViewController.m */; };
+		AAD6485F192E83BE00B18B73 /* TransponderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD6485C192E83BE00B18B73 /* TransponderViewController.m */; };
+		AAD64860192E83BE00B18B73 /* TransponderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAD6485D192E83BE00B18B73 /* TransponderViewController.xib */; };
+		AAD64861192E83BE00B18B73 /* TransponderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAD6485D192E83BE00B18B73 /* TransponderViewController.xib */; };
+		AAD6486C192EB03700B18B73 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD6486B192EB03700B18B73 /* Accounts.framework */; };
+		AAD6486F192EBD6A00B18B73 /* TwitterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD6486E192EBD6A00B18B73 /* TwitterCell.m */; };
+		AAD64870192EBD6A00B18B73 /* TwitterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD6486E192EBD6A00B18B73 /* TwitterCell.m */; };
+		AAD64872192EBF7D00B18B73 /* TwitterCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAD64871192EBF7D00B18B73 /* TwitterCell.xib */; };
+		AAD64873192EBF7D00B18B73 /* TwitterCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAD64871192EBF7D00B18B73 /* TwitterCell.xib */; };
+		AAD64875192EC9D300B18B73 /* twitter_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = AAD64874192EC9D300B18B73 /* twitter_logo.png */; };
+		AAD64876192EC9D300B18B73 /* twitter_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = AAD64874192EC9D300B18B73 /* twitter_logo.png */; };
 		C02EBAB218ED4CD6004D93F6 /* ESTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C02EBAB118ED4CD6004D93F6 /* ESTableViewController.m */; };
 		C0905EAD18EF617800016522 /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0905EAC18EF617800016522 /* Firebase.framework */; };
 		C0905EAF18EF618D00016522 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C0905EAE18EF618D00016522 /* libicucore.dylib */; };
@@ -50,6 +62,16 @@
 
 /* Begin PBXFileReference section */
 		64D605A682624C319C652A2D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		AAD64858192E757800B18B73 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		AAD64859192E757800B18B73 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		AAD6485B192E83BE00B18B73 /* TransponderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransponderViewController.h; sourceTree = "<group>"; };
+		AAD6485C192E83BE00B18B73 /* TransponderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransponderViewController.m; sourceTree = "<group>"; };
+		AAD6485D192E83BE00B18B73 /* TransponderViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TransponderViewController.xib; sourceTree = "<group>"; };
+		AAD6486B192EB03700B18B73 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		AAD6486D192EBD6A00B18B73 /* TwitterCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterCell.h; sourceTree = "<group>"; };
+		AAD6486E192EBD6A00B18B73 /* TwitterCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitterCell.m; sourceTree = "<group>"; };
+		AAD64871192EBF7D00B18B73 /* TwitterCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TwitterCell.xib; sourceTree = "<group>"; };
+		AAD64874192EC9D300B18B73 /* twitter_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitter_logo.png; sourceTree = "<group>"; };
 		C004E32B18F35B2400F0E7F9 /* Math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Math.h; sourceTree = "<group>"; };
 		C02EBAB018ED4CD6004D93F6 /* ESTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESTableViewController.h; sourceTree = "<group>"; };
 		C02EBAB118ED4CD6004D93F6 /* ESTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESTableViewController.m; sourceTree = "<group>"; };
@@ -98,6 +120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAD6486C192EB03700B18B73 /* Accounts.framework in Frameworks */,
 				C0905EB718EF61BD00016522 /* SystemConfiguration.framework in Frameworks */,
 				C0905EB518EF61AC00016522 /* Security.framework in Frameworks */,
 				C0905EB318EF61A300016522 /* CFNetwork.framework in Frameworks */,
@@ -126,6 +149,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AAD64862192E86E500B18B73 /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				AAD64874192EC9D300B18B73 /* twitter_logo.png */,
+				AAD64858192E757800B18B73 /* ViewController.h */,
+				AAD64859192E757800B18B73 /* ViewController.m */,
+				AAD6485B192E83BE00B18B73 /* TransponderViewController.h */,
+				AAD6485C192E83BE00B18B73 /* TransponderViewController.m */,
+				AAD6485D192E83BE00B18B73 /* TransponderViewController.xib */,
+				AAD6486D192EBD6A00B18B73 /* TwitterCell.h */,
+				AAD6486E192EBD6A00B18B73 /* TwitterCell.m */,
+				AAD64871192EBF7D00B18B73 /* TwitterCell.xib */,
+			);
+			name = ui;
+			sourceTree = "<group>";
+		};
 		C0ACBCB518EB6C7100BBFCDF = {
 			isa = PBXGroup;
 			children = (
@@ -149,6 +188,7 @@
 		C0ACBCC018EB6C7200BBFCDF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AAD6486B192EB03700B18B73 /* Accounts.framework */,
 				C0905EB618EF61BD00016522 /* SystemConfiguration.framework */,
 				C0905EB418EF61AC00016522 /* Security.framework */,
 				C0905EB218EF61A300016522 /* CFNetwork.framework */,
@@ -170,12 +210,13 @@
 			isa = PBXGroup;
 			children = (
 				C0ACBCF918EB70CC00BBFCDF /* Extension */,
+				AAD64862192E86E500B18B73 /* ui */,
+				C0ACBCD018EB6C7200BBFCDF /* ESAppDelegate.h */,
+				C0ACBCD118EB6C7200BBFCDF /* ESAppDelegate.m */,
 				C0ACBCF618EB6C8000BBFCDF /* ESTransponder.h */,
 				C0ACBCF718EB6C8000BBFCDF /* ESTransponder.m */,
 				C0ACBD0718EBAAE900BBFCDF /* ESBeacon.h */,
 				C0ACBD0818EBAAE900BBFCDF /* ESBeacon.m */,
-				C0ACBCD018EB6C7200BBFCDF /* ESAppDelegate.h */,
-				C0ACBCD118EB6C7200BBFCDF /* ESAppDelegate.m */,
 				C0ACBCD318EB6C7200BBFCDF /* Main.storyboard */,
 				C02EBAB018ED4CD6004D93F6 /* ESTableViewController.h */,
 				C02EBAB118ED4CD6004D93F6 /* ESTableViewController.m */,
@@ -316,9 +357,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAD64875192EC9D300B18B73 /* twitter_logo.png in Resources */,
 				C0ACBCDA18EB6C7200BBFCDF /* Images.xcassets in Resources */,
+				AAD64860192E83BE00B18B73 /* TransponderViewController.xib in Resources */,
 				C0ACBCCC18EB6C7200BBFCDF /* InfoPlist.strings in Resources */,
 				C0ACBCD518EB6C7200BBFCDF /* Main.storyboard in Resources */,
+				AAD64872192EBF7D00B18B73 /* TwitterCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,6 +371,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0ACBCEB18EB6C7200BBFCDF /* InfoPlist.strings in Resources */,
+				AAD64873192EBF7D00B18B73 /* TwitterCell.xib in Resources */,
+				AAD64876192EC9D300B18B73 /* twitter_logo.png in Resources */,
+				AAD64861192E83BE00B18B73 /* TransponderViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,9 +419,12 @@
 			files = (
 				C0ACBD0218EB72BC00BBFCDF /* CBPeripheralManager+Ext.m in Sources */,
 				C0ACBCD818EB6C7200BBFCDF /* ESViewController.m in Sources */,
+				AAD6485E192E83BE00B18B73 /* TransponderViewController.m in Sources */,
 				C0ACBCFF18EB710C00BBFCDF /* CBUUID+Ext.m in Sources */,
 				C0ACBCFC18EB70E000BBFCDF /* CBCentralManager+Ext.m in Sources */,
 				C02EBAB218ED4CD6004D93F6 /* ESTableViewController.m in Sources */,
+				AAD6485A192E757800B18B73 /* ViewController.m in Sources */,
+				AAD6486F192EBD6A00B18B73 /* TwitterCell.m in Sources */,
 				C0ACBCD218EB6C7200BBFCDF /* ESAppDelegate.m in Sources */,
 				C0ACBD0918EBAAE900BBFCDF /* ESBeacon.m in Sources */,
 				C0ACBCF818EB6C8000BBFCDF /* ESTransponder.m in Sources */,
@@ -387,6 +437,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0ACBCED18EB6C7200BBFCDF /* transponderTests.m in Sources */,
+				AAD64870192EBD6A00B18B73 /* TwitterCell.m in Sources */,
+				AAD6485F192E83BE00B18B73 /* TransponderViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

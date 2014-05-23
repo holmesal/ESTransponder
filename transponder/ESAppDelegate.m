@@ -7,13 +7,21 @@
 //
 
 #import "ESAppDelegate.h"
-
+#import "TransponderViewController.h"
 @implementation ESAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-
-    // Initialize the transponder. Users will not yet be asked for Bluetooth and Location permissions.
+    
+//    UIViewController *viewController = [[TransponderViewController alloc] init];
+//    
+//    UINavigationController *navContr = self.window.rootViewController;
+//    
+//    [navContr pushViewController:viewController animated:YES];
+//
+    
+    
+    return YES;
     self.transponder = [ESTransponder sharedInstance];
     
     // Grab the ID, to associate with your own users.

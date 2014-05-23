@@ -20,6 +20,17 @@
 // New transponder identifiers
 #define IDENTIFIER_STRING @"5B464730-0826-47AF-BD7C-FFD3F3AD3A82"
 #define IDENTITY_BEACON_UUID @"B556F8D0-34DF-4CA6-9193-CC79FACFAE1E"
+#define TransponderDomain @"com.mtnlab.Transponder" //used in TransponderViewController to pass back errors when failure occurs somewhere for Transponder's use.
+typedef NS_ENUM(NSUInteger, TransponderErrorCode)
+{
+    
+    /*! Flush automatically: periodically (once a minute or every 100 logged events) and always at app reactivation. */
+    TransponderErrorCodeAuthorizationDenied = 1,
+    TransponderErrorCodeBluetoothDenied,
+    TransponderErrorCodeLocationDenied,
+    TransponderErrorCodeCancel
+    
+};
 
 // Debugging behavior after a reboot is no fun. Turn this on to get local notifications when the bluetooth stack state changes.
 #define SHOW_DEBUG_NOTIFICATIONS YES
@@ -47,7 +58,8 @@ typedef enum
 // Starts broadcasting and detecting, will ask for Bluetooth and Location permissions
 - (void)startTransponder;
 
-
+//UI function
++(void)PresentTransponderAuthFlowFromViewController:(UIViewController*)viewController withCompletion:(void(^)(NSError *error))completion;
 
 // Events API
 

@@ -15,7 +15,7 @@
 #import "CBPeripheralManager+Ext.h"
 #import "CBUUID+Ext.h"
 
-//#import "FCUser.h"
+#import "TransponderViewController.h"
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
@@ -110,6 +110,18 @@ static ESTransponder *sharedTransponder;
 //when timer is up, it fires a failure message for the stack.  This must be interupted if success occurs sooner.
 @synthesize reportStackFailureTimer;
 
+
++(void)PresentTransponderAuthFlowFromViewController:(UIViewController*)viewController withCompletion:(void(^)(NSError *error))completion
+{
+    if ([viewController isKindOfClass:[UIViewController class]])
+    {
+        UIViewController *tvc = [[TransponderViewController alloc] initWithCompletionBlock:completion];
+        [viewController presentViewController:tvc animated:YES completion:^{}];
+    } else
+    {
+        NSLog(@"Fatal error %@.  The sender, '%@', must by kind of UIViewController.", @"PresentTransponderAuthFlowFromViewController:withCompletion:", viewController);
+    }
+}
 
 -(ESTransponder*)init
 {

@@ -15,4 +15,5 @@
 @property (strong, nonatomic) ESTransponder *transponder;
 @property (strong, nonatomic) NSString *transponderID;
 
+
 @end
