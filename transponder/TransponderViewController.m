@@ -139,6 +139,7 @@ typedef NS_ENUM(NSUInteger, TransponderView)
             [self performSelectorOnMainThread:@selector(animateToShowTwitterList) withObject:nil waitUntilDone:NO];
         } else
         {
+#warning "If using Twitter, at this point check that self.twitterAccounts.count.  If not, then create a new error type to express that the user does not have a linked twitter.  But we won't use twitter in the future so nvm.  Still... be warned."
 //            if (![[NSUserDefaults standardUserDefaults] boolForKey:Transponder_NSUserDefaultsKey_HasDeniedTwitterAccessOnceBefore])
 //            {
                 [[NSUserDefaults standardUserDefaults] setBool:YES forKey:Transponder_NSUserDefaultsKey_HasDeniedTwitterAccessOnceBefore];
@@ -213,7 +214,7 @@ typedef NS_ENUM(NSUInteger, TransponderView)
 {
     if (tableView == twitterTableView)
     {
-        return 5 + self.twitterAccounts.count;
+        return 1 + self.twitterAccounts.count;
     }
     return 99999;
 }

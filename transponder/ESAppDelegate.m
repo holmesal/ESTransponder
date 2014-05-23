@@ -21,7 +21,7 @@
 //
     
     
-    return YES;
+//    return YES;
     self.transponder = [ESTransponder sharedInstance];
     
     // Grab the ID, to associate with your own users.
