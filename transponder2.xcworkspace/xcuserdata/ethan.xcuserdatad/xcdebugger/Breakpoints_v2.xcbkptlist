@@ -61,9 +61,9 @@
             timestampString = "422572559.950298"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "34"
-            endingLineNumber = "34"
-            landmarkName = "-oAuthViewController:didFailWithError:"
+            startingLineNumber = "98"
+            endingLineNumber = "98"
+            landmarkName = "-performFetchAndPost"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -74,12 +74,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "transponder/ESAppDelegate.m"
-            timestampString = "422572560.570139"
+            timestampString = "422521946.564861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
-            landmarkName = "-oAuthViewController:didSucceedWithCredential:"
+            startingLineNumber = "23"
+            endingLineNumber = "23"
+            landmarkName = "-pushToServer"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -89,29 +89,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "transponder/TransponderViewController.m"
-            timestampString = "422592536.952328"
+            filePath = "transponder/SightingPushQueue.m"
+            timestampString = "422524285.05327"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "318"
-            endingLineNumber = "318"
-            landmarkName = "-postCodeToAlonso"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "transponder/TransponderViewController.m"
-            timestampString = "422593205.545954"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "336"
-            endingLineNumber = "336"
-            landmarkName = "-postCodeToAlonso"
+            startingLineNumber = "148"
+            endingLineNumber = "148"
+            landmarkName = "-postRequestForSightings:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

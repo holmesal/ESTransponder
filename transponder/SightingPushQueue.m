@@ -11,8 +11,8 @@
 #import "Sighting.h"
 #import "NSObject+SBJson.h"
 
-#define MTNLAB_POST_URL @"http://transponder.mtnlab.io"
-#define MAXIMUM_POST_CAPACITY 55
+#define MTNLAB_POST_URL @"http://transponder.mtnlab.io/sighting"
+#define MAXIMUM_POST_CAPACITY 25
 #define MINIMUM_POST_INTERVAL 30.0f
 #define TRANSPONDER_NSUSERDEFAULTS_LAST_POST_TIME @"TRANSPONDER_NSUSERDEFAULTS_LAST_POST_TIME"
 
@@ -103,7 +103,7 @@
                         //delete all these sightings!
                         for (Sighting *sighting in sightings)
                         {
-                            [self.bgMOC delete:sighting];
+                            [self.bgMOC deleteObject:sighting];
                         }
                     }
 
@@ -130,7 +130,7 @@
 {
     
     NSString *jsonString = @"[";
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < sightings.count; i++)
         {
             
             jsonString = [jsonString stringByAppendingString:[[sightings objectAtIndex:i] JSONRepresentation]];
@@ -142,7 +142,7 @@
         }
     jsonString = [jsonString stringByAppendingString:@"]"];
     
-    NSDictionary *jsonDict = [jsonString JSONValue];
+//    NSDictionary *jsonDict = [jsonString JSONValue];
     
     NSURL *Url = [NSURL URLWithString:MTNLAB_POST_URL];
     
