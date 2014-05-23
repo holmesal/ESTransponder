@@ -19,19 +19,20 @@
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
+<<<<<<< HEAD
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ESTransponder.m"
-            timestampString = "422509304.162513"
+            filePath = "transponder/ESAppDelegate.m"
+            timestampString = "422393608.448289"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "905"
-            endingLineNumber = "905"
-            landmarkName = "-startBeacon:"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
+            landmarkName = "-didDiscoverAnonymousUser"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -42,13 +43,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ESTransponder.m"
-            timestampString = "422509309.40852"
+            timestampString = "422482515.692402"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "887"
-            endingLineNumber = "887"
-            landmarkName = "-flipState"
-            landmarkType = "5">
+            startingLineNumber = "1228"
+            endingLineNumber = "1228"
+            landmarkName = "@implementation ESTransponder"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -58,46 +59,16 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ESTransponder.m"
-            timestampString = "422509360.685556"
+            timestampString = "422482667.210136"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "549"
-            endingLineNumber = "549"
-            landmarkName = "-startAdvertising"
-            landmarkType = "5">
+            startingLineNumber = "1234"
+            endingLineNumber = "1234"
+            landmarkName = "@implementation ESTransponder"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ESTransponder.m"
-            timestampString = "422509400.848676"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "650"
-            endingLineNumber = "650"
-            landmarkName = "-peripheralManagerDidUpdateState:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ESTransponder.m"
-            timestampString = "422509646.4649"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "652"
-            endingLineNumber = "652"
-            landmarkName = "-peripheralManagerDidUpdateState:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
+=======
+>>>>>>> cleaning up transponder
    </Breakpoints>
 </Bucket>
