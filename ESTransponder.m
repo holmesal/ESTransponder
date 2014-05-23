@@ -225,7 +225,7 @@ static ESTransponder *sharedTransponder;
 - (void)startTransponder
 {
     NSLog(@"Starting via startAwesome");
-    [self startBroadcasting];
+//    [self startBroadcasting];
     [self startDetecting];
 }
 
@@ -465,7 +465,9 @@ static ESTransponder *sharedTransponder;
     [self.locationManager startRangingBeaconsInRegion:self.rangingRegion];
     // Start flipping between an iBeacon and a BLE peripheral
     // If you aren't already
-//    if (!self.isFlipping) [self startFlipping];
+    if (self.peripheralManager.state == CBPeripheralManagerStatePoweredOn){
+        [self startAdvertising];
+    }
     // Chirp the discovery iBeacon for a few seconds
     [self chirpBeacon];
     // Update the date we use for the notification timeout
@@ -475,14 +477,16 @@ static ESTransponder *sharedTransponder;
 - (void)appWillEnterBackground
 {
     NSLog(@"Transponder -- App is entering background");
+    // Stop acting as a beacon
+    [self.peripheralManager stopAdvertising];
     // Stop chirping as a beacon
     [self stopChirping];
-    // Start advertising only as a BLE peripheral
+//    // Start advertising only as a BLE peripheral
     [self stopFlipping];
-    // Stop ranging beacons
-    [self stopRanging];
-    // Pause the filter timer
-    //    self.filterTimer
+//    // Stop ranging beacons
+//    [self stopRanging];
+//    // Pause the filter timer
+//    //    self.filterTimer
 }
 
 # pragma mark - core bluetooth
@@ -799,8 +803,8 @@ static ESTransponder *sharedTransponder;
     // Stop flipState from continuing to flip
     self.flippingBreaker = YES;
     // Reset the bluetooth right now to broadcast BLE
-    if (DEBUG_BEACON) NSLog(@"-- broadcasting as BLE");
-    [self resetBluetooth];
+//    if (DEBUG_BEACON) NSLog(@"-- broadcasting as BLE");
+//    [self resetBluetooth];
     // Just in case, reset the bluetooth stack again in a few seconds (to miss any timeouts in the meantime)
     //    [self performSelector:@selector(resetBluetooth) withObject:nil afterDelay:1.5];
     
@@ -873,18 +877,21 @@ static ESTransponder *sharedTransponder;
                 // Start broadcasting as a wakeup region
                 if (DEBUG_BEACON) NSLog(@"-- broadcasting as chirp iBeacon");
                 [self startBeacon:self.chirpBeaconData];
+                // Quickly switch to identity
+                [self performSelector:@selector(flipState) withObject:nil afterDelay:2.0];
                 break;
             case 1:
                 // Start broadcasting as an iBeacon on identity beacon
                 if (DEBUG_BEACON) NSLog(@"-- broadcasting as identity iBeacon");
                 [self startBeacon:self.identityBeaconData];
+                // Do this cycle again after 10 seconds
+                [self performSelector:@selector(flipState) withObject:nil afterDelay:30.0];
                 break;
             default:
                 break;
         }
         
-        // Do this again after a while
-        [self performSelector:@selector(flipState) withObject:nil afterDelay:10.0];
+        
     }
     
 }
