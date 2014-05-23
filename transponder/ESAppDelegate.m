@@ -7,21 +7,16 @@
 //
 
 #import "ESAppDelegate.h"
-#import "TransponderViewController.h"
+
+@interface ESAppDelegate () <CLLocationManagerDelegate>
+
+@end
+
 @implementation ESAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
-//    UIViewController *viewController = [[TransponderViewController alloc] init];
-//    
-//    UINavigationController *navContr = self.window.rootViewController;
-//    
-//    [navContr pushViewController:viewController animated:YES];
-//
-    
-    
-//    return YES;
+    // Initialize the transponder. Users will not yet be asked for Bluetooth and Location permissions.
     self.transponder = [ESTransponder sharedInstance];
     
     // Grab the ID, to associate with your own users.
@@ -38,6 +33,7 @@
     
     // Start the transponder broadcasting and receiving. Users will be asked for permissions at this point, if they haven't already accepted them.
     [self.transponder startTransponder];
+    
     
     return YES;
 }
@@ -56,8 +52,8 @@
 
 - (void)didDiscoverAnonymousUser
 {
-    NSLog(@"Discovered anonymous user");
-    NSLog(@"ok");
+//    NSLog(@"Discovered anonymous user");
+//    NSLog(@"ok");
     
     // Badge the app icon
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
@@ -98,6 +94,12 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+// Called when a beacon region is entered
+- (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
+{
+    NSLog(@"Woke up via app delegate location manager callback");
 }
 
 @end
