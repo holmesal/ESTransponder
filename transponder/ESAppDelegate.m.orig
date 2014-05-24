@@ -7,34 +7,30 @@
 //
 
 #import "ESAppDelegate.h"
-<<<<<<< HEAD
-#import "TransponderViewController.h"
-=======
 
+#import "SightingPushQueue.h"
 @interface ESAppDelegate () <CLLocationManagerDelegate>
+
+@property (strong, nonatomic) SightingPushQueue *sightingPushQueue;
 
 @end
 
->>>>>>> cleaning up transponder
 @implementation ESAppDelegate
+@synthesize sightingPushQueue;
+
+-(void)pushToServer
+{
+    [sightingPushQueue tryToPost];
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 <<<<<<< HEAD
-    
-//    UIViewController *viewController = [[TransponderViewController alloc] init];
-//    
-//    UINavigationController *navContr = self.window.rootViewController;
-//    
-//    [navContr pushViewController:viewController animated:YES];
-//
-    
-    
-//    return YES;
-=======
     // Initialize the transponder. Users will not yet be asked for Bluetooth and Location permissions.
->>>>>>> cleaning up transponder
     self.transponder = [ESTransponder sharedInstance];
+    
+    // Start the transponder broadcasting and receiving. Users will be asked for permissions at this point, if they haven't already accepted them.
+    [self.transponder startTransponder];
     
     // Grab the ID, to associate with your own users.
     self.transponderID = self.transponder.transponderID;
@@ -48,11 +44,44 @@
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(didDiscoverAnonymousUser) name:TransponderAnonymousUserDiscovered object:nil];
     
-    // Start the transponder broadcasting and receiving. Users will be asked for permissions at this point, if they haven't already accepted them.
-    [self.transponder startTransponder];
+=======
+    self.sightingPushQueue = [[SightingPushQueue alloc] init];
     
+    for (int i = 0; i < 20; i ++)
+    {
+        NSDictionary *dict =  @{
+                                    @"broadcaster":@"fakeBroadcaster",
+                                    @"sighter":@"fakeSighter",
+                                    @"rssi":@0,
+                                    @"timestamp":[NSNumber numberWithInt:i]
+                               };
+        [sightingPushQueue addObjectToQueue:dict];
+    }
+    
+    [self performSelector:@selector(pushToServer) withObject:nil afterDelay:10];
+>>>>>>> Added PushQueue support, but still testing it.
     
     return YES;
+//    // Initialize the transponder. Users will not yet be asked for Bluetooth and Location permissions.
+//    self.transponder = [ESTransponder sharedInstance];
+//    
+//    // Grab the ID, to associate with your own users.
+//    self.transponderID = self.transponder.transponderID;
+//    NSLog(@"Transponder initialized. This device has ID %@", self.transponderID);
+//    
+//    // Listen for users-in-range updates
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUsers:) name:TransponderDidUpdateUsersInRange object:nil];
+//    
+//    // Listen for discovery notification suggestions. You can also listen to `TransponderUserDiscovered` and `TransponderAnonymousUserDiscovered` and roll your own time-and location filtering.
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(sendDiscoverNotification) name:TransponderSuggestsDiscoveryNotification object:nil];
+//    
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(didDiscoverAnonymousUser) name:TransponderAnonymousUserDiscovered object:nil];
+//    
+//    // Start the transponder broadcasting and receiving. Users will be asked for permissions at this point, if they haven't already accepted them.
+//    [self.transponder startTransponder];
+//    
+//    
+//    return YES;
 }
 
 - (void)updateUsers:(NSNotification *)note

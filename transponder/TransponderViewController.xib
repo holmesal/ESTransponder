@@ -7,10 +7,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TransponderViewController">
             <connections>
                 <outlet property="cancelButton" destination="V1n-6d-5Kb" id="nq1-XF-IMQ"/>
+                <outlet property="linkedInWebView" destination="bC3-zb-AB8" id="cUi-mm-mQh"/>
                 <outlet property="permissionsView" destination="rxY-gp-zYf" id="cx9-t7-hvz"/>
                 <outlet property="showInfo" destination="H7e-hx-HfV" id="jTe-FP-3b2"/>
                 <outlet property="twitterButton" destination="gKK-t4-ZXg" id="dad-f9-myP"/>
-                <outlet property="twitterTableView" destination="HVf-Dh-3fP" id="fZx-fc-SE6"/>
                 <outlet property="twitterView" destination="ekM-nF-tXA" id="oIW-Ct-tx2"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="q24-CZ-IUi"/>
             </connections>
@@ -32,26 +32,17 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
-                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ekM-nF-tXA">
-                    <rect key="frame" x="-320" y="0.0" width="320" height="568"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ekM-nF-tXA">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="80" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="HVf-Dh-3fP">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bC3-zb-AB8">
+                            <rect key="frame" x="0.0" y="1" width="320" height="568"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        </tableView>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        </webView>
                     </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstItem="HVf-Dh-3fP" firstAttribute="width" secondItem="ekM-nF-tXA" secondAttribute="width" id="Bzy-hL-zvy"/>
-                        <constraint firstItem="HVf-Dh-3fP" firstAttribute="height" secondItem="ekM-nF-tXA" secondAttribute="height" id="Rtd-1D-doh"/>
-                        <constraint firstItem="HVf-Dh-3fP" firstAttribute="leading" secondItem="ekM-nF-tXA" secondAttribute="leading" id="ebM-Ll-AQK"/>
-                        <constraint firstItem="HVf-Dh-3fP" firstAttribute="top" secondItem="ekM-nF-tXA" secondAttribute="top" id="zSm-cg-y4J"/>
-                    </constraints>
+                    <color key="backgroundColor" red="1" green="0.077799958959999999" blue="0.1204171023" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H7e-hx-HfV">
                     <rect key="frame" x="-320" y="0.0" width="320" height="568"/>

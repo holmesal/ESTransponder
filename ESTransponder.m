@@ -18,6 +18,8 @@
 #import "TransponderViewController.h"
 #import "Math.h"
 
+#import "SightingPushQueue.h"
+
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL YES
 #define DEBUG_BEACON YES
@@ -90,12 +92,15 @@
 // Oscillator
 @property NSInteger broadcastMode;
 
+@property (strong, nonatomic) SightingPushQueue *sightingPushQueue;
+
 @end
 
 @implementation ESTransponder
 @synthesize transponderID;
 //@synthesize peripheralManagerIsRunning;
 @synthesize isRunning;
+@synthesize sightingPushQueue;
 
 static ESTransponder *sharedTransponder;
 +(ESTransponder *)sharedInstance
@@ -128,6 +133,8 @@ static ESTransponder *sharedTransponder;
 {
     if (self = [super init])
     {
+        //intialize the push queue which will store data in core data until such time as it reaches the server
+        self.sightingPushQueue = [[SightingPushQueue alloc] init];
         // Generate a new id, or use an existing one
         self.transponderID = [self getOrGenerateID];
         self.identifier = [CBUUID UUIDWithString:IDENTIFIER_STRING];
@@ -1280,8 +1287,8 @@ static ESTransponder *sharedTransponder;
                                };
     NSLog(@"Adding sighting: %@", sighting);
     
-    // Add it to the queue
-    // TODO
+    //added to disk-stored push/post queue
+    [sightingPushQueue addObjectToQueue:sighting];
 }
 
 -(void)dealloc

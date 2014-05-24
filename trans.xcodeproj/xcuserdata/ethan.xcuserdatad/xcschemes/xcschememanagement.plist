@@ -4,25 +4,20 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Pods-Firebase.xcscheme</key>
+		<key>trans.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
-		</dict>
-		<key>Pods.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>2</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>19072F5276BF40769AFCA796</key>
+		<key>C0ACBCBD18EB6C7200BBFCDF</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D2F26B21A8DF48AEB04901EC</key>
+		<key>C0ACBCDE18EB6C7200BBFCDF</key>
 		<dict>
 			<key>primary</key>
 			<true/>
