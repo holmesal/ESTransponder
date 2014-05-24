@@ -22,7 +22,7 @@
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL YES
-#define DEBUG_BEACON YES
+#define DEBUG_BEACON NO
 #define DEBUG_USERS NO
 #define DEBUG_TIMEOUTS NO
 #define DEBUG_NOTIFICATIONS NO
@@ -220,6 +220,7 @@ static ESTransponder *sharedTransponder;
         return existingID;
     } else {
         // Generate an id
+        NSAssert(NO, @"Developers are expected to go through the auth flow, before creating ESTransponder instances");
         NSInteger idInt = esRandomNumberIn(0, 99999999);
         NSString *stringId = [NSString stringWithFormat:@"%ld",(long)idInt];
         [prefs setValue:stringId forKey:@"transponderID"];
@@ -232,7 +233,7 @@ static ESTransponder *sharedTransponder;
 - (void)startTransponder
 {
     NSLog(@"Starting via startAwesome");
-//    [self startBroadcasting];
+    [self startBroadcasting];
     [self startDetecting];
 }
 
@@ -633,6 +634,19 @@ static ESTransponder *sharedTransponder;
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
 {
     if (DEBUG_CENTRAL) NSLog(@"-- central state changed: %@", self.centralManager.stateString);
+    if (central.state == CBCentralManagerStateUnknown)
+    {
+        return;
+    }
+    
+    /*
+     CBCentralManagerStateResetting,1
+     CBCentralManagerStateUnsupported,2
+     CBCentralManagerStateUnauthorized,3
+     CBCentralManagerStatePoweredOff,4
+     CBCentralManagerStatePoweredOn,5
+     */
+    NSLog(@"central.state = %d", self.centralManager.state);
     
     // Emit the state, if state != unknown
     if (central.state)
@@ -645,6 +659,8 @@ static ESTransponder *sharedTransponder;
     {
         [self startScanning];
     }
+    
+    
 }
 
 #pragma mark - CBPeripheralManagerDelegate
@@ -819,9 +835,7 @@ static ESTransponder *sharedTransponder;
 
 - (void)flipState
 {
-    if (IS_RUNNING_ON_SIMULATOR)
-        return;
-    
+
     // There are three states:
     // State 0: Broadcasting using normal BLE
     // State 1: Broadcasting as an iBeacon on a wakeup region (0-18)
@@ -995,6 +1009,7 @@ static ESTransponder *sharedTransponder;
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
+    NSLog(@"status 2 ?= %d", status);
     // Emit that shit, unless underetmined state.
     if (status == kCLAuthorizationStatusNotDetermined)
     {
@@ -1079,7 +1094,7 @@ static ESTransponder *sharedTransponder;
         if (DEBUG_BEACON) NSLog(@"%@",beacons);
     }
     
-    NSLog(@"--- Found %lu beacons in range.", (unsigned long)[beacons count]);
+    if (DEBUG_BEACON) NSLog(@"--- Found %lu beacons in range.", (unsigned long)[beacons count]);
     
     for (CLBeacon *beacon in beacons) {
         //        NSString *userID = [NSString stringWithFormat:@"%@",beacon.minor];
@@ -1121,6 +1136,12 @@ static ESTransponder *sharedTransponder;
 {
     if (self.coreLocationWasTried && self.bluetoothWasTried)
     {
+        BOOL peripheralManagerStateSuccess = (self.peripheralManager.state == CBPeripheralManagerStatePoweredOn);
+        BOOL centraManagerStateSuccess = (self.centralManager.state == CBPeripheralManagerStatePoweredOn);
+        BOOL locationManagerStateSuccess = ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized);
+        
+        NSLog(@"peripheralManagerStateSuccess-%d centralManagerStateSuccess-%d locationManagerStateSuccess-%d", peripheralManagerStateSuccess, centraManagerStateSuccess, locationManagerStateSuccess);
+        
         if (self.peripheralManager.state == CBPeripheralManagerStatePoweredOn &&
             self.centralManager.state == CBPeripheralManagerStatePoweredOn &&
             [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized)

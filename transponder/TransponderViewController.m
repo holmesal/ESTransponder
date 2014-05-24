@@ -33,6 +33,8 @@ typedef NS_ENUM(NSUInteger, TransponderView)
     TransponderViewPermissionsView
     
 };
+
+@property (strong, nonatomic) UIView *loadingOverlay;
 @property (strong, nonatomic) NSString *code;
 
 //ui
@@ -50,6 +52,7 @@ typedef NS_ENUM(NSUInteger, TransponderView)
 
 //twitter users table view
 @property (weak, nonatomic) IBOutlet UIWebView *linkedInWebView;
+@property (assign, nonatomic) BOOL webViewFirstScreenLoaded;
 
 //@property (strong, nonatomic) NSCache *cache; //image cache for profile pics
 
@@ -60,8 +63,10 @@ typedef NS_ENUM(NSUInteger, TransponderView)
 @end
 
 @implementation TransponderViewController;
+@synthesize loadingOverlay;
 
 @synthesize linkedInWebView;
+@synthesize webViewFirstScreenLoaded;
 
 @synthesize completion;
 
@@ -90,16 +95,6 @@ typedef NS_ENUM(NSUInteger, TransponderView)
     return self;
 }
 
-//- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-//{
-//    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-//    if (self)
-//    {
-//        // Custom initialization
-//        
-//    }
-//    return self;
-//}
 
 
 - (void)viewDidLoad
@@ -107,7 +102,7 @@ typedef NS_ENUM(NSUInteger, TransponderView)
     [super viewDidLoad];
  
     {
-        NSString *requestStr = [NSString stringWithFormat:@"https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id=%@&scope=%@&state=%@&redirect_uri=%@", API_KEY, SCOPE, STATE, REDIRECTURI];
+        NSString *requestStr = self.authUrlString;
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:requestStr]];
         [linkedInWebView loadRequest:request];
     }
@@ -143,38 +138,16 @@ typedef NS_ENUM(NSUInteger, TransponderView)
 //callbacks for showInfo view
 -(void)twitterButtonAction:(id)sender
 {
-    [twitterButton setUserInteractionEnabled:NO];
-    [self animateToShowTwitterList];
-//        [twitterButton setUserInteractionEnabled:NO];
-//
-//    ACAccountStore *account = [[ACAccountStore alloc] init];
-//    ACAccountType *accountType = [account accountTypeWithAccountTypeIdentifier:
-//                                  ACAccountTypeIdentifierTwitter];
-//    
-//    //show loading spinner?
-//    [account requestAccessToAccountsWithType:accountType options:nil
-//                                  completion:^(BOOL granted, NSError *error)
-//    {
-//        NSLog(@"error = %@", error.localizedDescription);
-//        
-//        self.twitterAccounts = [account
-//                                accountsWithAccountType:accountType];
-//        
-//        if (granted && self.twitterAccounts.count)
-//        {
-//            [self performSelectorOnMainThread:@selector(animateToShowTwitterList) withObject:nil waitUntilDone:NO];
-//        } else
-//        {
-//#warning "If using Twitter, at this point check that self.twitterAccounts.count.  If not, then create a new error type to express that the user does not have a linked twitter.  But we won't use twitter in the future so nvm.  Still... be warned."
-////            if (![[NSUserDefaults standardUserDefaults] boolForKey:Transponder_NSUserDefaultsKey_HasDeniedTwitterAccessOnceBefore])
-////            {
-//                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:Transponder_NSUserDefaultsKey_HasDeniedTwitterAccessOnceBefore];
-//                [self performSelectorOnMainThread:@selector(cancel:) withObject:[TransponderViewController generateError:TransponderErrorCodeAuthorizationDenied] waitUntilDone:NO];
-//                NSLog(@"not granted my twitter type thingy!");
-//            
-////            }
-//        }
-//    }];
+    if (webViewFirstScreenLoaded)
+    {
+        [twitterButton setUserInteractionEnabled:NO];
+        [self animateToShowTwitterList];
+    } else
+    {
+#warning show loading screen
+        NSLog(@"WEEEOOO");
+        [self displayLoadingView];
+    }
 }
 
 -(void)twitterRejectButtonAction:(id)sender
@@ -199,6 +172,13 @@ typedef NS_ENUM(NSUInteger, TransponderView)
 -(void)webViewDidFinishLoad:(UIWebView *)webView
 {
     NSURL *url = webView.request.URL;
+    
+    if ([url.absoluteString isEqualToString:self.authUrlString])
+    {
+        webViewFirstScreenLoaded = YES;
+        NSLog(@"done first load");
+        return;
+    }
     NSLog(@"");
     NSLog(@"FINISH load");
     NSLog(@"\t%@", url.absoluteString);
@@ -256,11 +236,12 @@ typedef NS_ENUM(NSUInteger, TransponderView)
             //call the completion with an error and custom error description value
             
             [self cancel:[TransponderViewController generateError:TransponderErrorCodeAuthorizationDenied withErrorDescription:errorDescriptionValue]];
+            return NO;
         }
         NSLog(@"code = %@", self.code);
         
         //no double pressing buttons, dr. mr.
-        [self.linkedInWebView setUserInteractionEnabled:NO];
+//        [self.linkedInWebView setUserInteractionEnabled:NO];
         
         #warning "TODO: let's put a loading view here to show what is going on"
 //        [self postRequestWithLinkedInCode];
@@ -288,7 +269,7 @@ typedef NS_ENUM(NSUInteger, TransponderView)
      &client_id=YOUR_API_KEY
      &client_secret=YOUR_SECRET_KEY
      */
-    NSString *requestString = [NSString stringWithFormat:@"http://192.168.1.19:8080/user"];
+    NSString *requestString = [NSString stringWithFormat:@"http://transponder.mtnlab.io/user"];
     
     NSURL *url = [NSURL URLWithString:requestString];
     
@@ -304,88 +285,117 @@ typedef NS_ENUM(NSUInteger, TransponderView)
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue,
-                   ^{
-                       
-                       
-                       NSError *error= nil;
-                       NSURLResponse *response = nil;
-                       NSLog(@"sending request to alonsolo");
-                       NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-                       NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-                       
-                       
-                       NSLog(@"repsonse string = %@", responseString);
-                       
-                       
-                       NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-                       int status = httpResponse.statusCode;
-                       NSLog(@"status = %d", status);
-                       
-                       dispatch_sync(dispatch_get_main_queue(),
-                         ^{
-                             if (status == 200)
-                             {
-                                 NSLog(@"200!!!!!!");
-                             } else
-                             {
-                                 NSLog(@"try again!!!!!!! you failed %d", status);
-                             }
-                         });
-                   });
+    ^{
+       
+       
+       NSError *error= nil;
+       NSURLResponse *response = nil;
+       NSLog(@"sending request to alonsolo");
+       NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+       NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+       
+       
+       NSLog(@"repsonse string = %@", responseString);
+       
+       
+       NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+       int status = httpResponse.statusCode;
+       NSLog(@"status = %d", status);
+       
+       dispatch_sync(dispatch_get_main_queue(),
+         ^{
+             if (status == 200)
+             {
+                 NSLog(@"200!!!!!!");
+                 NSDictionary *response = [responseString JSONValue];
+                 NSString *beaconID = [response objectForKey:@"beaconID"];
+                 [self transitionToPermissionViewWithBeaconID:beaconID];
+             } else
+             {
+                 NSLog(@"try again!!!!!!! you failed %d", status);
+             }
+         });
+    });
 }
 
--(void)postRequestWithLinkedInCode
+//-(void)postRequestWithLinkedInCode
+//{
+//    NSLog(@"postRequestWithLinkedInCode");
+//    /*
+//     https://www.linkedin.com/uas/oauth2/accessToken?grant_type=authorization_code
+//     &code=AUTHORIZATION_CODE
+//     &redirect_uri=YOUR_REDIRECT_URI
+//     &client_id=YOUR_API_KEY
+//     &client_secret=YOUR_SECRET_KEY
+//     */
+//    NSString *requestString = [NSString stringWithFormat:@"https://www.linkedin.com/uas/oauth2/accessToken?grant_type=authorization_code&code=%@&redirect_uri=%@&client_id=%@&client_secret=%@", self.code, REDIRECTURI, API_KEY, SECRET_KEY];
+//    
+//    NSURL *url = [NSURL URLWithString:requestString];
+//    
+//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+//    [request setURL:url];
+//    [request setHTTPMethod:@"POST"];
+//    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+//    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+//    
+//    
+//    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+//    dispatch_async(queue,
+//    ^{
+//        
+//        
+//        NSError *error= nil;
+//        NSURLResponse *response = nil;
+//        NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+//        NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+//        
+//        
+//        NSLog(@"repsonse string = %@", responseString);
+//        
+//        
+//        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+//        int status = httpResponse.statusCode;
+//        NSLog(@"status = %d", status);
+//        
+//        dispatch_sync(dispatch_get_main_queue(),
+//        ^{
+//            if (status == 200)
+//            {
+//#warning "faked a beaconID to proceed into the next thingy"
+//                NSInteger beaconID = esRandomNumberIn(0, 99999);
+//                [self transitionToPermissionViewWithBeaconID:beaconID];
+//            } else
+//            {
+//                NSAssert(NO, @"handle the case on status != 200");
+//            }
+//        });
+//    });
+//}
+
+-(void)transitionToPermissionViewWithBeaconID:(NSString*)beaconID
 {
-    NSLog(@"postRequestWithLinkedInCode");
-    /*
-     https://www.linkedin.com/uas/oauth2/accessToken?grant_type=authorization_code
-     &code=AUTHORIZATION_CODE
-     &redirect_uri=YOUR_REDIRECT_URI
-     &client_id=YOUR_API_KEY
-     &client_secret=YOUR_SECRET_KEY
-     */
-    NSString *requestString = [NSString stringWithFormat:@"https://www.linkedin.com/uas/oauth2/accessToken?grant_type=authorization_code&code=%@&redirect_uri=%@&client_id=%@&client_secret=%@", self.code, REDIRECTURI, API_KEY, SECRET_KEY];
+    [self animateFromView:twitterView toView:permissionsView];
+    //initialize transponder and listen to how it does
     
-    NSURL *url = [NSURL URLWithString:requestString];
+//    NSString *beaconIDStr = [NSString stringWithFormat:@"%d", beaconID];
+    [[NSUserDefaults standardUserDefaults] setObject:beaconID forKey:@"transponderID"];
+
+
+    [[ESTransponder sharedInstance] startTransponder];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(transponderHardwareFailure:) name:TransponderDisabled object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(transponderHardwareSuccess:) name:TransponderEnabled object:nil];
     
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:url];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    
-    
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
-    dispatch_async(queue,
-    ^{
-        
-        
-        NSError *error= nil;
-        NSURLResponse *response = nil;
-        NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-        NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-        
-        
-        NSLog(@"repsonse string = %@", responseString);
-        
-        
-        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-        int status = httpResponse.statusCode;
-        NSLog(@"status = %d", status);
-        
-        dispatch_sync(dispatch_get_main_queue(),
-        ^{
-            if (status == 200)
-            {
-                
-            } else
-            {
-                NSAssert(NO, @"handle the case on status != 200");
-            }
-        });
-    });
-    
-    
+}
+
+-(void)transponderHardwareFailure:(id)sender
+{
+    NSLog(@"transponderHardwareFailure:%@", sender);
+}
+-(void)transponderHardwareSuccess:(id)sender
+{
+    NSLog(@"transponderHardwareSuccess:%@", sender);
+    //good to go!
+    [self cancel:nil];
 }
 
 -(void)animateFromView:(UIView*)fromView toView:(UIView*)toView
@@ -428,54 +438,7 @@ typedef NS_ENUM(NSUInteger, TransponderView)
 
 
 #pragma mark UITableViewDelegate & UITableViewDataSource methods
-//-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-//{
-//    if (tableView == twitterTableView)
-//    {
-//        return 1;
-//    }
-//    return 99999;
-//}
-//-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-//{
-//    if (tableView == twitterTableView)
-//    {
-//        return 1 + self.twitterAccounts.count;
-//    }
-//    return 99999;
-//}
-//-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    if (tableView == twitterTableView)
-//    {
-//        TwitterCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TwitterCell"];
-//        if (!cell)
-//        {
-//            NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"TwitterCell" owner:self options:nil];
-//            // Grab a pointer to the first object (presumably the custom cell, as that's all the XIB should contain).
-//            cell = [topLevelObjects objectAtIndex:0];
-//            //asynchronous image loading into the appropriate cell!
-//            
-//        }
-//        
-//        return cell;
-//    }
-//    return nil;
-//}
-//
-//-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    if (tableView == twitterTableView)
-//    {
-//        NSLog(@"selected profile %d", indexPath.row);
-//        
-//        [self animateFromView:twitterView toView:permissionsView];
-//        
-//        [self performSelector:@selector(activateBluetoothStack) withObject:nil afterDelay:1];
-//        
-//        [tableView setUserInteractionEnabled:NO];
-//    }
-//}
+\
 
 -(void)activateBluetoothStack
 {
@@ -485,44 +448,7 @@ typedef NS_ENUM(NSUInteger, TransponderView)
 
 //async image load helper
 
-//- (void)processImageDataWithURLString:(NSString *)urlString andBlock:(void (^)(UIImage *imageData, BOOL synchronous))processImage
-//{
-//    
-//    NSURL *url = [NSURL URLWithString:urlString];
-//    UIImage *retrievedImage = [self.cache objectForKey:url];
-//    if (retrievedImage)
-//    {
-//        processImage(retrievedImage, YES);
-//    }
-//    
-//    dispatch_queue_t callerQueue = dispatch_get_current_queue();
-//    dispatch_queue_t downloadQueue = dispatch_queue_create("TransponderViewControllerTwitterImage", NULL);
-//    dispatch_async(downloadQueue, ^
-//    {
-//        NSData * imageData = [NSData dataWithContentsOfURL:url];
-//        
-//        dispatch_async(callerQueue, ^
-//        {
-//            UIImage *img = [UIImage imageWithData:imageData];
-//            [cache setObject:imageData forKey:url];
-//            processImage(img, NO);
-//        });
-//    });
-////    dispatch_release(downloadQueue);
-//}
 
-//-(NSCache*)cache
-//{
-//    if (!cache)
-//    {
-//        cache = [[NSCache alloc] init];
-//    }
-//    return cache;
-//}
-
-/* NSError
- * helper method for returning error and error descriptions
- */
 
 +(NSError*)generateError:(TransponderErrorCode)errorCode
 {
@@ -583,5 +509,190 @@ typedef NS_ENUM(NSUInteger, TransponderView)
     return [NSError errorWithDomain:TransponderDomain code:errorCode userInfo:userInfo];
 }
 
+
+//-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+//{
+//    if (tableView == twitterTableView)
+//    {
+//        return 1;
+//    }
+//    return 99999;
+//}
+//-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+//{
+//    if (tableView == twitterTableView)
+//    {
+//        return 1 + self.twitterAccounts.count;
+//    }
+//    return 99999;
+//}
+//-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    if (tableView == twitterTableView)
+//    {
+//        TwitterCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TwitterCell"];
+//        if (!cell)
+//        {
+//            NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"TwitterCell" owner:self options:nil];
+//            // Grab a pointer to the first object (presumably the custom cell, as that's all the XIB should contain).
+//            cell = [topLevelObjects objectAtIndex:0];
+//            //asynchronous image loading into the appropriate cell!
+//
+//        }
+//
+//        return cell;
+//    }
+//    return nil;
+//}
+//
+//-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    if (tableView == twitterTableView)
+//    {
+//        NSLog(@"selected profile %d", indexPath.row);
+//
+//        [self animateFromView:twitterView toView:permissionsView];
+//
+//        [self performSelector:@selector(activateBluetoothStack) withObject:nil afterDelay:1];
+//
+//        [tableView setUserInteractionEnabled:NO];
+//    }
+//}
+
+//- (void)processImageDataWithURLString:(NSString *)urlString andBlock:(void (^)(UIImage *imageData, BOOL synchronous))processImage
+//{
+//
+//    NSURL *url = [NSURL URLWithString:urlString];
+//    UIImage *retrievedImage = [self.cache objectForKey:url];
+//    if (retrievedImage)
+//    {
+//        processImage(retrievedImage, YES);
+//    }
+//
+//    dispatch_queue_t callerQueue = dispatch_get_current_queue();
+//    dispatch_queue_t downloadQueue = dispatch_queue_create("TransponderViewControllerTwitterImage", NULL);
+//    dispatch_async(downloadQueue, ^
+//    {
+//        NSData * imageData = [NSData dataWithContentsOfURL:url];
+//
+//        dispatch_async(callerQueue, ^
+//        {
+//            UIImage *img = [UIImage imageWithData:imageData];
+//            [cache setObject:imageData forKey:url];
+//            processImage(img, NO);
+//        });
+//    });
+////    dispatch_release(downloadQueue);
+//}
+
+//-(NSCache*)cache
+//{
+//    if (!cache)
+//    {
+//        cache = [[NSCache alloc] init];
+//    }
+//    return cache;
+//}
+//- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+//{
+//    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+//    if (self)
+//    {
+//        // Custom initialization
+//
+//    }
+//    return self;
+//}
+/* NSError
+ * helper method for returning error and error descriptions
+ */
+
+//twitterButtonAction
+//        [twitterButton setUserInteractionEnabled:NO];
+//
+//    ACAccountStore *account = [[ACAccountStore alloc] init];
+//    ACAccountType *accountType = [account accountTypeWithAccountTypeIdentifier:
+//                                  ACAccountTypeIdentifierTwitter];
+//
+//    //show loading spinner?
+//    [account requestAccessToAccountsWithType:accountType options:nil
+//                                  completion:^(BOOL granted, NSError *error)
+//    {
+//        NSLog(@"error = %@", error.localizedDescription);
+//
+//        self.twitterAccounts = [account
+//                                accountsWithAccountType:accountType];
+//
+//        if (granted && self.twitterAccounts.count)
+//        {
+//            [self performSelectorOnMainThread:@selector(animateToShowTwitterList) withObject:nil waitUntilDone:NO];
+//        } else
+//        {
+//#warning "If using Twitter, at this point check that self.twitterAccounts.count.  If not, then create a new error type to express that the user does not have a linked twitter.  But we won't use twitter in the future so nvm.  Still... be warned."
+////            if (![[NSUserDefaults standardUserDefaults] boolForKey:Transponder_NSUserDefaultsKey_HasDeniedTwitterAccessOnceBefore])
+////            {
+//                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:Transponder_NSUserDefaultsKey_HasDeniedTwitterAccessOnceBefore];
+//                [self performSelectorOnMainThread:@selector(cancel:) withObject:[TransponderViewController generateError:TransponderErrorCodeAuthorizationDenied] waitUntilDone:NO];
+//                NSLog(@"not granted my twitter type thingy!");
+//
+////            }
+//        }
+//    }];
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+-(NSString*)authUrlString
+{
+    return [NSString stringWithFormat:@"https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id=%@&scope=%@&state=%@&redirect_uri=%@", API_KEY, SCOPE, STATE, REDIRECTURI];
+    
+}
+
+-(UIView*)loadingOverlay
+{
+    if (!loadingOverlay)
+    {
+        loadingOverlay = [[UIView alloc] initWithFrame:self.view.bounds];
+        [loadingOverlay setBackgroundColor:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:0.4f]];
+        
+        UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        CGRect tempRect = activityIndicatorView.frame;
+        tempRect.origin.x = (loadingOverlay.frame.size.width-tempRect.size.width)*0.5f;
+        tempRect.origin.y = (loadingOverlay.frame.size.height-tempRect.size.height)*0.5f;
+        [activityIndicatorView setFrame:tempRect];
+        
+        
+        [loadingOverlay addSubview:activityIndicatorView];
+        
+    }
+    return loadingOverlay;
+}
+-(void)displayLoadingView
+{
+    self.loadingOverlay.alpha = 0.0f;
+    [self.view addSubview:self.loadingOverlay];
+
+    [UIView animateWithDuration:0.3f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^
+    {
+        self.loadingOverlay.alpha = 1.0f;
+    } completion:^(BOOL finished){}];
+    
+}
+-(BOOL)removeLoadingOverlay
+{
+    if (loadingOverlay.superview)
+    {
+        [UIView animateWithDuration:0.3f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^
+        {
+            loadingOverlay.alpha = 0.0f;
+        } completion:^(BOOL finished)
+        {
+            [loadingOverlay removeFromSuperview];
+        }];
+        return YES;
+    }
+    return NO;
+}
 
 @end

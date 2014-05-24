@@ -25,108 +25,116 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wpJ-bj-XFh">
-                            <rect key="frame" x="57" y="100" width="207" height="128"/>
+                            <rect key="frame" x="57" y="81" width="207" height="128"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="1" alpha="0.22" colorSpace="calibratedWhite"/>
                         </imageView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ekM-nF-tXA">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ekM-nF-tXA">
+                    <rect key="frame" x="-320" y="0.0" width="320" height="568"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bC3-zb-AB8">
-                            <rect key="frame" x="0.0" y="1" width="320" height="568"/>
+                        <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bC3-zb-AB8">
+                            <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         </webView>
                     </subviews>
-                    <color key="backgroundColor" red="1" green="0.077799958959999999" blue="0.1204171023" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="bC3-zb-AB8" firstAttribute="width" secondItem="ekM-nF-tXA" secondAttribute="width" id="SEc-06-HGv"/>
+                        <constraint firstAttribute="bottom" secondItem="bC3-zb-AB8" secondAttribute="bottom" id="jSP-9k-CeA"/>
+                        <constraint firstItem="bC3-zb-AB8" firstAttribute="top" secondItem="ekM-nF-tXA" secondAttribute="top" constant="20" id="jqO-dV-d3y"/>
+                        <constraint firstAttribute="centerX" secondItem="bC3-zb-AB8" secondAttribute="centerX" id="qPG-Xb-op8"/>
+                    </constraints>
                 </view>
-                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H7e-hx-HfV">
-                    <rect key="frame" x="-320" y="0.0" width="320" height="568"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H7e-hx-HfV">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <subviews>
-                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show info?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vnx-fS-34h">
-                            <rect key="frame" x="77" y="258" width="166" height="52"/>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="262" translatesAutoresizingMaskIntoConstraints="NO" id="vnx-fS-34h">
+                            <rect key="frame" x="29" y="246" width="262" height="92"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="52" id="OGF-7s-tuz"/>
-                                <constraint firstAttribute="width" constant="166" id="Q41-da-Ki7"/>
+                                <constraint firstAttribute="height" constant="92" id="OGF-7s-tuz"/>
+                                <constraint firstAttribute="width" constant="262" id="Q41-da-Ki7"/>
                             </constraints>
-                            <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="25"/>
-                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                            <attributedString key="attributedText">
+                                <fragment content="Automatically gather ">
+                                    <attributes>
+                                        <color key="NSColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        <font key="NSFont" size="22" name="HelveticaNeue-Thin"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                                <fragment content="LinkedIn   ">
+                                    <attributes>
+                                        <color key="NSColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <font key="NSFont" size="22" name="HelveticaNeue-Thin"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                                <fragment content="connections at this event using iBeacon">
+                                    <attributes>
+                                        <color key="NSColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        <font key="NSFont" size="22" name="HelveticaNeue-Thin"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
                             <nil key="highlightedColor"/>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W3I-Bo-1sZ">
                             <rect key="frame" x="0.0" y="20" width="320" height="230"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" white="1" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QIz-te-Byk">
-                            <rect key="frame" x="0.0" y="318" width="320" height="230"/>
+                            <rect key="frame" x="0.0" y="338" width="320" height="230"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nMk-Ca-DZG">
-                                    <rect key="frame" x="42" y="37" width="237" height="154"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gKK-t4-ZXg">
+                                    <rect key="frame" x="118" y="72" width="85" height="85"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gKK-t4-ZXg">
-                                            <rect key="frame" x="59" y="63" width="119" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="119" id="vmC-k5-cT1"/>
-                                                <constraint firstAttribute="height" constant="30" id="yLT-n7-RbJ"/>
-                                            </constraints>
-                                            <state key="normal" title="Twitter"/>
-                                        </button>
-                                    </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="154" id="FJl-To-esS"/>
-                                        <constraint firstAttribute="width" constant="237" id="MwE-sJ-uxu"/>
-                                        <constraint firstAttribute="centerY" secondItem="gKK-t4-ZXg" secondAttribute="centerY" constant="-1" id="bxE-Fe-xet"/>
-                                        <constraint firstAttribute="centerX" secondItem="gKK-t4-ZXg" secondAttribute="centerX" id="kPf-wV-efP"/>
+                                        <constraint firstAttribute="width" constant="85" id="vmC-k5-cT1"/>
+                                        <constraint firstAttribute="height" constant="85" id="yLT-n7-RbJ"/>
                                     </constraints>
-                                </view>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="twitter_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="qZf-Np-3Lr">
-                                    <rect key="frame" x="191" y="106" width="18" height="18"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="18" id="LRP-K1-K4z"/>
-                                        <constraint firstAttribute="width" constant="18" id="qBY-kx-sfL"/>
-                                    </constraints>
-                                </imageView>
+                                    <state key="normal" image="lets-go.png"/>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstItem="gKK-t4-ZXg" firstAttribute="top" secondItem="qZf-Np-3Lr" secondAttribute="bottom" constant="-24" id="8fF-fd-mrn"/>
-                                <constraint firstItem="qZf-Np-3Lr" firstAttribute="leading" secondItem="gKK-t4-ZXg" secondAttribute="trailing" constant="-29" id="cY3-SS-Vm8"/>
-                                <constraint firstAttribute="centerX" secondItem="nMk-Ca-DZG" secondAttribute="centerX" constant="-0.5" id="gc5-q3-sbL"/>
-                                <constraint firstAttribute="centerY" secondItem="nMk-Ca-DZG" secondAttribute="centerY" constant="1" id="zgv-3F-Mpl"/>
+                                <constraint firstAttribute="centerY" secondItem="gKK-t4-ZXg" secondAttribute="centerY" constant="0.5" id="4TH-bQ-Zjf"/>
+                                <constraint firstAttribute="centerX" secondItem="gKK-t4-ZXg" secondAttribute="centerX" constant="-0.5" id="vm2-nV-sxT"/>
                             </constraints>
                         </view>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="linkedin.png" translatesAutoresizingMaskIntoConstraints="NO" id="DvG-S6-mFR">
+                            <rect key="frame" x="44" y="269" width="90" height="48"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </imageView>
                     </subviews>
-                    <color key="backgroundColor" red="0.26955976279999999" green="0.6588235294" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="W3I-Bo-1sZ" firstAttribute="top" secondItem="H7e-hx-HfV" secondAttribute="top" constant="20" id="78Z-N9-dft"/>
                         <constraint firstAttribute="trailing" secondItem="QIz-te-Byk" secondAttribute="trailing" id="7gg-vO-qpL"/>
                         <constraint firstItem="W3I-Bo-1sZ" firstAttribute="leading" secondItem="H7e-hx-HfV" secondAttribute="leading" id="JsU-ZE-8uZ"/>
                         <constraint firstAttribute="centerX" secondItem="vnx-fS-34h" secondAttribute="centerX" id="Knp-FG-o3h"/>
-                        <constraint firstItem="vnx-fS-34h" firstAttribute="top" secondItem="W3I-Bo-1sZ" secondAttribute="bottom" constant="8" id="Mnl-b5-aZu"/>
-                        <constraint firstAttribute="bottom" secondItem="QIz-te-Byk" secondAttribute="bottom" constant="20" id="RuF-K1-gCK"/>
+                        <constraint firstItem="vnx-fS-34h" firstAttribute="top" secondItem="W3I-Bo-1sZ" secondAttribute="bottom" constant="-4" id="Mnl-b5-aZu"/>
+                        <constraint firstAttribute="bottom" secondItem="QIz-te-Byk" secondAttribute="bottom" id="RuF-K1-gCK"/>
                         <constraint firstAttribute="trailing" secondItem="W3I-Bo-1sZ" secondAttribute="trailing" id="XiN-gX-7QM"/>
                         <constraint firstItem="QIz-te-Byk" firstAttribute="leading" secondItem="H7e-hx-HfV" secondAttribute="leading" id="bTU-s2-8Dn"/>
-                        <constraint firstAttribute="centerY" secondItem="vnx-fS-34h" secondAttribute="centerY" id="kT8-jV-APE"/>
-                        <constraint firstItem="QIz-te-Byk" firstAttribute="top" secondItem="vnx-fS-34h" secondAttribute="bottom" constant="8" id="ktv-5n-bR3"/>
+                        <constraint firstAttribute="centerY" secondItem="vnx-fS-34h" secondAttribute="centerY" constant="-8" id="kT8-jV-APE"/>
+                        <constraint firstItem="QIz-te-Byk" firstAttribute="top" secondItem="vnx-fS-34h" secondAttribute="bottom" id="ktv-5n-bR3"/>
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V1n-6d-5Kb">
-                    <rect key="frame" x="20" y="20" width="30" height="30"/>
+                    <rect key="frame" x="8" y="27" width="30" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="X">
+                    <state key="normal" backgroundImage="close-line.png">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
@@ -134,7 +142,7 @@
                     </connections>
                 </button>
             </subviews>
-            <color key="backgroundColor" red="0.26955976279999999" green="0.6588235294" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="rxY-gp-zYf" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="04a-45-Zk9"/>
                 <constraint firstItem="ekM-nF-tXA" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="K9X-Gn-k6v"/>
@@ -154,6 +162,8 @@
         </view>
     </objects>
     <resources>
-        <image name="twitter_logo.png" width="1139" height="926"/>
+        <image name="close-line.png" width="60" height="60"/>
+        <image name="lets-go.png" width="170" height="170"/>
+        <image name="linkedin.png" width="241" height="59"/>
     </resources>
 </document>

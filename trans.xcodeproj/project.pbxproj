@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		96E1F78259E146EF85707B38 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 64D605A682624C319C652A2D /* libPods.a */; };
+		AA18DCBB1930693300F3AAD2 /* lets-go.png in Resources */ = {isa = PBXBuildFile; fileRef = AA18DCBA1930693300F3AAD2 /* lets-go.png */; };
+		AA18DCBD19306BC100F3AAD2 /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = AA18DCBC19306BC100F3AAD2 /* close.png */; };
+		AA18DCBF19306DAB00F3AAD2 /* close-invert.png in Resources */ = {isa = PBXBuildFile; fileRef = AA18DCBE19306DAB00F3AAD2 /* close-invert.png */; };
+		AA18DCC119306E6100F3AAD2 /* close-gray.png in Resources */ = {isa = PBXBuildFile; fileRef = AA18DCC019306E6100F3AAD2 /* close-gray.png */; };
+		AA18DCC319306FDB00F3AAD2 /* close-line.png in Resources */ = {isa = PBXBuildFile; fileRef = AA18DCC219306FDB00F3AAD2 /* close-line.png */; };
+		AA18DCC71930729800F3AAD2 /* linkedin.png in Resources */ = {isa = PBXBuildFile; fileRef = AA18DCC61930729800F3AAD2 /* linkedin.png */; };
 		AA8AAA28192F0F6E0037134C /* SightingModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AA8AAA26192F0F6E0037134C /* SightingModel.xcdatamodeld */; };
 		AA8AAA2B192F0FD60037134C /* Sighting.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8AAA2A192F0FD60037134C /* Sighting.m */; };
 		AA8AAA2E192F10060037134C /* SightingPushQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8AAA2D192F10060037134C /* SightingPushQueue.m */; };
@@ -79,6 +85,12 @@
 
 /* Begin PBXFileReference section */
 		64D605A682624C319C652A2D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA18DCBA1930693300F3AAD2 /* lets-go.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "lets-go.png"; sourceTree = "<group>"; };
+		AA18DCBC19306BC100F3AAD2 /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
+		AA18DCBE19306DAB00F3AAD2 /* close-invert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-invert.png"; sourceTree = "<group>"; };
+		AA18DCC019306E6100F3AAD2 /* close-gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-gray.png"; sourceTree = "<group>"; };
+		AA18DCC219306FDB00F3AAD2 /* close-line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-line.png"; sourceTree = "<group>"; };
+		AA18DCC61930729800F3AAD2 /* linkedin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = linkedin.png; sourceTree = "<group>"; };
 		AA8AAA27192F0F6E0037134C /* SightingModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SightingModel.xcdatamodel; sourceTree = "<group>"; };
 		AA8AAA29192F0FD50037134C /* Sighting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sighting.h; sourceTree = "<group>"; };
 		AA8AAA2A192F0FD60037134C /* Sighting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sighting.m; sourceTree = "<group>"; };
@@ -342,6 +354,12 @@
 		C0ACBCC818EB6C7200BBFCDF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				AA18DCC61930729800F3AAD2 /* linkedin.png */,
+				AA18DCC219306FDB00F3AAD2 /* close-line.png */,
+				AA18DCC019306E6100F3AAD2 /* close-gray.png */,
+				AA18DCBE19306DAB00F3AAD2 /* close-invert.png */,
+				AA18DCBC19306BC100F3AAD2 /* close.png */,
+				AA18DCBA1930693300F3AAD2 /* lets-go.png */,
 				C0ACBCC918EB6C7200BBFCDF /* transponder2-Info.plist */,
 				C0ACBCCA18EB6C7200BBFCDF /* InfoPlist.strings */,
 				C0ACBCCD18EB6C7200BBFCDF /* main.m */,
@@ -469,9 +487,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAD64875192EC9D300B18B73 /* twitter_logo.png in Resources */,
+				AA18DCC119306E6100F3AAD2 /* close-gray.png in Resources */,
 				C0ACBCDA18EB6C7200BBFCDF /* Images.xcassets in Resources */,
+				AA18DCBD19306BC100F3AAD2 /* close.png in Resources */,
+				AA18DCBB1930693300F3AAD2 /* lets-go.png in Resources */,
+				AA18DCC319306FDB00F3AAD2 /* close-line.png in Resources */,
 				AAD64860192E83BE00B18B73 /* TransponderViewController.xib in Resources */,
 				C0ACBCCC18EB6C7200BBFCDF /* InfoPlist.strings in Resources */,
+				AA18DCBF19306DAB00F3AAD2 /* close-invert.png in Resources */,
+				AA18DCC71930729800F3AAD2 /* linkedin.png in Resources */,
 				C0ACBCD518EB6C7200BBFCDF /* Main.storyboard in Resources */,
 				AAD64872192EBF7D00B18B73 /* TwitterCell.xib in Resources */,
 			);
