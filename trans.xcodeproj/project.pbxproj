@@ -149,10 +149,8 @@
 		C0ACBCC118EB6C7200BBFCDF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C0ACBCC318EB6C7200BBFCDF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		C0ACBCC518EB6C7200BBFCDF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		C0ACBCC918EB6C7200BBFCDF /* transponder2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "transponder2-Info.plist"; sourceTree = "<group>"; };
 		C0ACBCCB18EB6C7200BBFCDF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C0ACBCCD18EB6C7200BBFCDF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		C0ACBCCF18EB6C7200BBFCDF /* transponderSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "transponderSDK-Prefix.pch"; sourceTree = "<group>"; };
 		C0ACBCD018EB6C7200BBFCDF /* ESAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ESAppDelegate.h; sourceTree = "<group>"; };
 		C0ACBCD118EB6C7200BBFCDF /* ESAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ESAppDelegate.m; sourceTree = "<group>"; };
 		C0ACBCD418EB6C7200BBFCDF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -360,11 +358,9 @@
 				AA18DCBE19306DAB00F3AAD2 /* close-invert.png */,
 				AA18DCBC19306BC100F3AAD2 /* close.png */,
 				AA18DCBA1930693300F3AAD2 /* lets-go.png */,
-				C0ACBCC918EB6C7200BBFCDF /* transponder2-Info.plist */,
 				C0ACBCCA18EB6C7200BBFCDF /* InfoPlist.strings */,
 				C0ACBCCD18EB6C7200BBFCDF /* main.m */,
 				C004E32B18F35B2400F0E7F9 /* Math.h */,
-				C0ACBCCF18EB6C7200BBFCDF /* transponderSDK-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";

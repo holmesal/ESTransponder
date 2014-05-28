@@ -33,23 +33,30 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 
-    self.sightingPushQueue = [[SightingPushQueue alloc] init];
-    return YES;
+    BOOL b = [ESTransponder HardwareIsSupportedOnDevice];
+//    self.sightingPushQueue = [[SightingPushQueue alloc] init];
+//    return YES;
     // Start the transponder broadcasting and receiving. Users will be asked for permissions at this point, if they haven't already accepted them.
-    [self.transponder startTransponder];
-    
-    // Grab the ID, to associate with your own users.
-    self.transponderID = self.transponder.transponderID;
-    NSLog(@"Transponder initialized. This device has ID %@", self.transponderID);
-    
-    // Listen for users-in-range updates
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUsers:) name:TransponderDidUpdateUsersInRange object:nil];
-    
-    // Listen for discovery notification suggestions. You can also listen to `TransponderUserDiscovered` and `TransponderAnonymousUserDiscovered` and roll your own time-and location filtering.
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(sendDiscoverNotification) name:TransponderSuggestsDiscoveryNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(didDiscoverAnonymousUser) name:TransponderAnonymousUserDiscovered object:nil];
-    
+    if ([ESTransponder HasBeaconID])
+    {
+        self.transponder = [ESTransponder sharedInstance];
+        [self.transponder startTransponder];
+        
+        // Grab the ID, to associate with your own users.
+        self.transponderID = self.transponder.transponderID;
+        NSLog(@"Transponder initialized. This device has ID %@", self.transponderID);
+        
+        // Listen for users-in-range updates
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUsers:) name:TransponderDidUpdateUsersInRange object:nil];
+        
+        // Listen for discovery notification suggestions. You can also listen to `TransponderUserDiscovered` and `TransponderAnonymousUserDiscovered` and roll your own time-and location filtering.
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(sendDiscoverNotification) name:TransponderSuggestsDiscoveryNotification object:nil];
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(didDiscoverAnonymousUser) name:TransponderAnonymousUserDiscovered object:nil];
+    } else
+    {
+       //present auth flow when button is pressed...
+    }
     
     return YES;
 }

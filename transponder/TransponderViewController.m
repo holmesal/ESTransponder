@@ -34,6 +34,11 @@ typedef NS_ENUM(NSUInteger, TransponderView)
     
 };
 
+
+@property (strong, nonatomic) void (^retryBlock)(void);
+
+
+@property (strong, nonatomic) UIAlertView *internetAlert;
 @property (strong, nonatomic) UIView *loadingOverlay;
 @property (strong, nonatomic) NSString *code;
 
@@ -54,6 +59,7 @@ typedef NS_ENUM(NSUInteger, TransponderView)
 @property (weak, nonatomic) IBOutlet UIWebView *linkedInWebView;
 @property (assign, nonatomic) BOOL webViewFirstScreenLoaded;
 
+@property (strong, nonatomic) UIView *loadingView;
 //@property (strong, nonatomic) NSCache *cache; //image cache for profile pics
 
 
@@ -63,6 +69,7 @@ typedef NS_ENUM(NSUInteger, TransponderView)
 @end
 
 @implementation TransponderViewController;
+@synthesize retryBlock;
 @synthesize loadingOverlay;
 
 @synthesize linkedInWebView;
@@ -79,7 +86,8 @@ typedef NS_ENUM(NSUInteger, TransponderView)
 
 //twitter list variables
 @synthesize twitterView;
-//@synthesize cache;
+
+
 
 //permissionsView stuff
 @synthesize permissionsView;
@@ -103,7 +111,7 @@ typedef NS_ENUM(NSUInteger, TransponderView)
  
     {
         NSString *requestStr = self.authUrlString;
-        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:requestStr]];
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:requestStr] cachePolicy:NSURLCacheStorageAllowedInMemoryOnly timeoutInterval:25];
         [linkedInWebView loadRequest:request];
     }
     // Do any additional setup after loading the view from its nib.
@@ -121,10 +129,6 @@ typedef NS_ENUM(NSUInteger, TransponderView)
 
     
     linkedInWebView.delegate = self;
-//    twitterTableView.delegate = self;
-//    twitterTableView.dataSource = self;
-//    twitterTableView.contentInset = UIEdgeInsetsMake(cancelButton.frame.origin.x+cancelButton.frame.size.height+8, 0, 8, 0);
-//    [twitterTableView registerClass:[TwitterCell class] forCellReuseIdentifier:@"TwitterCell"];
 
 }
 
@@ -138,36 +142,58 @@ typedef NS_ENUM(NSUInteger, TransponderView)
 //callbacks for showInfo view
 -(void)twitterButtonAction:(id)sender
 {
-    if (webViewFirstScreenLoaded)
-    {
-        [twitterButton setUserInteractionEnabled:NO];
-        [self animateToShowTwitterList];
-    } else
-    {
-#warning show loading screen
-        NSLog(@"WEEEOOO");
-        [self displayLoadingView];
+
+    if (!webViewFirstScreenLoaded)
+    {//setup the latency overlay
+        [self.view addSubview:self.loadingOverlay];
+        [self setLoadingOverlayText:@"Connecting to LinkedIn"];
+        [self setLoadingErrorText:@"Connection failed.  Trying again."];
+        
+        __weak typeof(self) weakSelf = self;
+        retryBlock = ^
+        {
+            UILabel *error = (UILabel*)[weakSelf.loadingOverlay viewWithTag:325];
+            
+            [UIView animateWithDuration:0.3 animations:^
+             {
+                 error.alpha = 1.0f;
+             }];
+             
+            NSString *requestStr = weakSelf.authUrlString;
+            NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:requestStr] cachePolicy:NSURLCacheStorageAllowedInMemoryOnly timeoutInterval:25];
+            [weakSelf.linkedInWebView loadRequest:request];
+        };
+        
+        self.loadingOverlay.alpha = 0.0f;
+        [self animateLoadingOverlay:NO];
+        [twitterView setHidden:YES];//set hidden when it is not yet loaded, fade it in later
     }
-}
 
--(void)twitterRejectButtonAction:(id)sender
-{
-    NSLog(@"twitterRejectButtonAction");
-}
-
--(void)animateToShowTwitterList
-{
     [self animateFromView:showInfo toView:twitterView];
+
 }
 
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    NSURL *url = webView.request.URL;
+    NSString *urlString = [error.userInfo objectForKey:NSErrorFailingURLStringKey];
+    NSInteger code = error.code;
+    NSLog(@"code = %d", code);
+    //Code = -1001
+    //retryBlock
+    if ([urlString isEqualToString:self.authUrlString])
+    {
+        retryBlock();
+    } else
+//    if ([urlString isEqualToString:@"https://www.linkedin.com/uas/oauth2/authorizedialog/submit"])
+    if (code != 102)
+    {
+        [self showAlertIfNotAlready];
+    }
     
-    NSLog(@"");
     NSLog(@"FAIL %@", error);
-    NSLog(@"\t%@", url.absoluteString);
+    NSLog(@"\t%@", urlString);
+    NSLog(@"\t%@", self.authUrlString);
 }
 -(void)webViewDidFinishLoad:(UIWebView *)webView
 {
@@ -176,6 +202,14 @@ typedef NS_ENUM(NSUInteger, TransponderView)
     if ([url.absoluteString isEqualToString:self.authUrlString])
     {
         webViewFirstScreenLoaded = YES;
+        [twitterView setHidden:NO];
+        [twitterView setAlpha:1.0f];
+        
+        if (self.loadingOverlayIsVisible)
+        {
+            [self animateLoadingOverlay:YES];
+        }
+
         NSLog(@"done first load");
         return;
     }
@@ -283,6 +317,12 @@ typedef NS_ENUM(NSUInteger, TransponderView)
     NSString *postString = [dict JSONRepresentation];
     [request setHTTPBody:[postString dataUsingEncoding:NSASCIIStringEncoding]];
     
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul), ^{
+    
+        dispatch_sync(dispatch_get_main_queue(), ^    {});
+        
+    });
+    
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue,
     ^{
@@ -312,7 +352,10 @@ typedef NS_ENUM(NSUInteger, TransponderView)
                  [self transitionToPermissionViewWithBeaconID:beaconID];
              } else
              {
-                 NSLog(@"try again!!!!!!! you failed %d", status);
+                 [self showAlertIfNotAlready];
+//                 NSLog(@"try again!!!!!!! you failed %d", status);
+//                 [self postCodeToAlonso];
+                 //wait
              }
          });
     });
@@ -374,10 +417,11 @@ typedef NS_ENUM(NSUInteger, TransponderView)
 
 -(void)transitionToPermissionViewWithBeaconID:(NSString*)beaconID
 {
-    [self animateFromView:twitterView toView:permissionsView];
-    //initialize transponder and listen to how it does
     
-//    NSString *beaconIDStr = [NSString stringWithFormat:@"%d", beaconID];
+    [self animateFromView:twitterView toView:permissionsView];
+
+    
+    //save transponder id
     [[NSUserDefaults standardUserDefaults] setObject:beaconID forKey:@"transponderID"];
 
 
@@ -648,51 +692,141 @@ typedef NS_ENUM(NSUInteger, TransponderView)
     return [NSString stringWithFormat:@"https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id=%@&scope=%@&state=%@&redirect_uri=%@", API_KEY, SCOPE, STATE, REDIRECTURI];
     
 }
+//description of what is going on
+-(void)setLoadingOverlayText:(NSString*)txt
+{
+    UILabel *label = (UILabel*)[self.loadingOverlay viewWithTag:9585];
 
+    label.alpha = 1.0f;
+    label.text = txt;
+}
+-(void)setLoadingErrorText:(NSString*)text
+{
+    UILabel *error = (UILabel*)[self.loadingOverlay viewWithTag:325];
+    
+    error.alpha = 0.0f;
+    error.text = text;
+}
+//-(void)showError
+//{
+//    UILabel *error = (UILabel*)[self.loadingOverlay viewWithTag:325];
+//    UILabel *description = (UILabel*)[self.loadingOverlay viewWithTag:9585];
+//    
+//    [UIView animateWithDuration:0.3 animations:^
+//    {
+//        error.alpha = 1.0f;
+//        description.alpha = 0.0f;
+//    }];
+//    
+//}
 -(UIView*)loadingOverlay
 {
     if (!loadingOverlay)
     {
         loadingOverlay = [[UIView alloc] initWithFrame:self.view.bounds];
-        [loadingOverlay setBackgroundColor:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:0.4f]];
+        [loadingOverlay setBackgroundColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.4f]];
         
-        UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
         CGRect tempRect = activityIndicatorView.frame;
         tempRect.origin.x = (loadingOverlay.frame.size.width-tempRect.size.width)*0.5f;
         tempRect.origin.y = (loadingOverlay.frame.size.height-tempRect.size.height)*0.5f;
         [activityIndicatorView setFrame:tempRect];
-        
-        
+        [activityIndicatorView setHidesWhenStopped:NO];
+        [activityIndicatorView startAnimating];
         [loadingOverlay addSubview:activityIndicatorView];
+        
+        
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 210, 85)];
+        [label setText:@"hello world"];
+        [label setNumberOfLines:0];
+        [label setTextColor:[UIColor whiteColor]];
+        label.tag = 9585;
+
+//        [label setBackgroundColor:[UIColor redColor]];
+        [label setTextAlignment:NSTextAlignmentCenter];
+        UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
+        [label setFont:font];
+        
+        CGRect tR = label.frame;
+        tR.origin.x = (loadingOverlay.frame.size.width-label.frame.size.width)*0.5f;
+        tR.origin.y = (activityIndicatorView.frame.origin.y-tR.size.height)*0.5f + activityIndicatorView.frame.size.height*0.5f;
+        
+        [label setFrame:tR];
+        
+        
+        
+        UILabel *errorLabel = [[UILabel alloc] initWithFrame:label.frame];
+        [errorLabel setTextAlignment:NSTextAlignmentCenter];
+        [errorLabel setFont:font];
+        [errorLabel setTextColor:[UIColor redColor] ];
+        errorLabel.tag = 325;
+        errorLabel.numberOfLines = 0;
+        
+        tR = errorLabel.frame;
+        tR.origin.y += loadingOverlay.frame.size.height*0.5f;
+        errorLabel.frame = tR;
+        
+        errorLabel.text = @"error occured";
+        
+        
+        [loadingOverlay addSubview:errorLabel];
+        [loadingOverlay addSubview:label];
         
     }
     return loadingOverlay;
 }
--(void)displayLoadingView
-{
-    self.loadingOverlay.alpha = 0.0f;
-    [self.view addSubview:self.loadingOverlay];
 
-    [UIView animateWithDuration:0.3f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^
-    {
-        self.loadingOverlay.alpha = 1.0f;
-    } completion:^(BOOL finished){}];
-    
-}
--(BOOL)removeLoadingOverlay
+-(BOOL)loadingOverlayIsVisible
 {
-    if (loadingOverlay.superview)
+    return (self.loadingOverlay.alpha == 1.0f);
+}
+
+-(void)animateLoadingOverlay:(BOOL)hidden
+{
+    [UIView animateWithDuration:1.3 delay:0.0f usingSpringWithDamping:1.0f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
     {
-        [UIView animateWithDuration:0.3f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^
-        {
-            loadingOverlay.alpha = 0.0f;
-        } completion:^(BOOL finished)
+        self.loadingOverlay.alpha = (hidden ? 0.0f : 1.0f);
+    } completion:^(BOOL finished)
+    {
+        if ( hidden )
         {
             [loadingOverlay removeFromSuperview];
-        }];
-        return YES;
-    }
-    return NO;
+        }
+    }];
 }
+-(void)showAlertIfNotAlready
+{
+    if (!self.internetAlert || ![self.internetAlert isVisible])
+    {
+        self.internetAlert = [[UIAlertView alloc] initWithTitle:@"Oops!" message:@"We failed to receive a response, please try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Okay", nil];
+        [self.internetAlert show];
+    }
+}
+
+//-(void)displayLoadingView
+//{
+//    self.loadingOverlay.alpha = 0.0f;
+//    [self.view addSubview:self.loadingOverlay];
+//
+//    [UIView animateWithDuration:0.3f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^
+//    {
+//        self.loadingOverlay.alpha = 1.0f;
+//    } completion:^(BOOL finished){}];
+//}
+//-(BOOL)removeLoadingOverlay
+//{
+//    if (loadingOverlay.superview)
+//    {
+//        [UIView animateWithDuration:0.3f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^
+//        {
+//            loadingOverlay.alpha = 0.0f;
+//        } completion:^(BOOL finished)
+//        {
+//            [loadingOverlay removeFromSuperview];
+//        }];
+//        return YES;
+//    }
+//    return NO;
+//}
 
 @end

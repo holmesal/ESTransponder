@@ -59,7 +59,9 @@ typedef enum
 - (void)startTransponder;
 
 //UI function
++(BOOL)HasBeaconID;
 +(void)PresentTransponderAuthFlowFromViewController:(UIViewController*)viewController withCompletion:(void(^)(NSError *error))completion;
++(BOOL)HardwareIsSupportedOnDevice;
 
 // Events API
 

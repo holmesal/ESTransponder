@@ -116,6 +116,21 @@ static ESTransponder *sharedTransponder;
 //when timer is up, it fires a failure message for the stack.  This must be interupted if success occurs sooner.
 @synthesize reportStackFailureTimer;
 
++(BOOL)HasBeaconID
+{
+    id transponderId = [[NSUserDefaults standardUserDefaults] objectForKey:@"transponderID"];
+    return (transponderId) ? YES : NO;
+}
++(BOOL)HardwareIsSupportedOnDevice
+{
+    CBCentralManager *cbcentralManager = [[CBCentralManager alloc] init];
+    
+
+    BOOL BLESupport = ([cbcentralManager state] != CBCentralManagerStateUnsupported);
+
+    
+    return BLESupport;
+}
 
 +(void)PresentTransponderAuthFlowFromViewController:(UIViewController*)viewController withCompletion:(void(^)(NSError *error))completion
 {
@@ -221,12 +236,13 @@ static ESTransponder *sharedTransponder;
     } else {
         // Generate an id
         NSAssert(NO, @"Developers are expected to go through the auth flow, before creating ESTransponder instances");
-        NSInteger idInt = esRandomNumberIn(0, 99999999);
-        NSString *stringId = [NSString stringWithFormat:@"%ld",(long)idInt];
-        [prefs setValue:stringId forKey:@"transponderID"];
-        [prefs synchronize];
-        return stringId;
+//        NSInteger idInt = esRandomNumberIn(0, 99999999);
+//        NSString *stringId = [NSString stringWithFormat:@"%ld",(long)idInt];
+//        [prefs setValue:stringId forKey:@"transponderID"];
+//        [prefs synchronize];
+//        return stringId;
     }
+    return nil;
 }
 
 // Shorthand for startDetecting, startBroadcasting, and chirpBeacon
@@ -1316,5 +1332,7 @@ static ESTransponder *sharedTransponder;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+
 
 @end
