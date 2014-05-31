@@ -1316,17 +1316,14 @@ static ESTransponder *sharedTransponder;
 # pragma mark - post queue
 - (void)sightedBroadcaster:(NSString *)broadcasterID withRSSI:(NSNumber *)rssi
 {
-    // Build the sighting object and add the timestamp
-    NSDictionary *sighting = @{@"sighted": broadcasterID,
-                               @"rssi": rssi,
-                               @"timestamp": [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]
-                               };
-//    NSLog(@"Adding sighting: %@", sighting);
     
     NSNumber *timestamp = [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]];
     
-    //added to disk-stored push/post queue
-    [sightingPushQueue addSightingWithID:broadcasterID withRSSI:rssi andTimestamp:timestamp];
+    //added to disk-stored push/post queue, if the RSSI isn't 0 (unknown)
+    if ([rssi integerValue] != 0) {
+        [sightingPushQueue addSightingWithID:broadcasterID withRSSI:rssi andTimestamp:timestamp];
+    }
+    
 }
 
 -(void)dealloc

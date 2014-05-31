@@ -22,16 +22,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ESTransponder.m"
-            timestampString = "422516422.533097"
+            timestampString = "423199033.476397"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "912"
-            endingLineNumber = "912"
-            landmarkName = "-flipState"
+            startingLineNumber = "633"
+            endingLineNumber = "633"
+            landmarkName = "-centralManager:didDiscoverPeripheral:advertisementData:RSSI:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -41,13 +41,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "transponder/Sighting.m"
-            timestampString = "423185625.16965"
+            filePath = "ESTransponder.m"
+            timestampString = "423199389.994603"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "22"
-            endingLineNumber = "22"
-            landmarkName = "-dictValue"
+            startingLineNumber = "1323"
+            endingLineNumber = "1323"
+            landmarkName = "-sightedBroadcaster:withRSSI:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
