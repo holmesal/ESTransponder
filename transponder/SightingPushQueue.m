@@ -17,12 +17,19 @@
 #define MINIMUM_POST_INTERVAL 30.0f
 #define TRANSPONDER_NSUSERDEFAULTS_LAST_POST_TIME @"TRANSPONDER_NSUSERDEFAULTS_LAST_POST_TIME"
 
+                //updates must be 32 seconds appart OR RSSI change
+#define kSAVEFILTER 32
+
 @interface SightingPushQueue ()
 
 @property (strong, nonatomic) NSManagedObjectContext *bgMOC;
 @property (strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
-@property (strong, nonatomic) NSNumber *lastNonZeroRssi;
+//@property (strong, nonatomic) NSNumber *lastNonZeroRssi;
+
+
+@property (strong, nonatomic) NSMutableDictionary *lastReadingsDictionary;
+
 
 @property (strong, nonatomic) NSTimer *postTimer;
 //DOCU
@@ -39,12 +46,15 @@
 @implementation SightingPushQueue
 @synthesize postTimer;
 @synthesize bgMOC;
-@synthesize lastNonZeroRssi;
+
+@synthesize lastReadingsDictionary;
+//@synthesize lastNonZeroRssi;
 -(id)init
 {
     if (self = [super init])
     {
-        lastNonZeroRssi = @0;
+        lastReadingsDictionary = [[NSMutableDictionary alloc] init];
+//        lastNonZeroRssi = @0;
     }
     return self;
 }
@@ -53,7 +63,7 @@
 -(BOOL)throttledPost
 {
     NSDate *lastPostDate = [[NSUserDefaults standardUserDefaults] objectForKey:TRANSPONDER_NSUSERDEFAULTS_LAST_POST_TIME];
-    if (YES ||
+    if (YES || //currently it is not throttled
         !lastPostDate ||
         fabsf([lastPostDate timeIntervalSinceNow]) >= MINIMUM_POST_INTERVAL )
     {
@@ -164,6 +174,8 @@
 
 - (void)addSightingWithID:(NSString *)sighted withRSSI:(NSNumber *)rssi andTimestamp:(NSNumber *)timestamp
 {
+    
+    
     [self.bgMOC performBlock:^{
         
     //    @{
@@ -173,26 +185,43 @@
     //      @"timestamp": [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]
     //      };
 
-    //    @property (nonatomic, retain) NSString * broadcaster;
-    //    @property (nonatomic, retain) NSString * sighter;
-    //    @property (nonatomic, retain) NSNumber * rssi;
-    //    @property (nonatomic, retain) NSNumber * timestamp;
-        
         // Grab the uuid from userPrefs
         //get uuid
         NSString *uuid = [[NSUserDefaults standardUserDefaults] objectForKey:@"transponder-uuid"];
         
-//        NSString *broadcaster = sightingDictionary[@"broadcaster"];
-//        NSString *sighter = sightingDictionary[@"sighter"];
-//        NSNumber *rssi = sightingDictionary[@"rssi"];
-//        NSNumber *timeStamp = sightingDictionary[@"timestamp"];
+        NSDictionary *last = [lastReadingsDictionary objectForKey:sighted];
+        if (last)
+        {//filter how frequently i save a value to be posted
+            NSNumber *timeStampLast = [last objectForKey:@"timestamp"];
+            NSNumber *rssiLast = [last objectForKey:@"rssi"];
+            if ([rssiLast integerValue] == [rssi integerValue])
+            {
+                double dt = [timestamp doubleValue] - [timeStampLast doubleValue];
+//                NSLog(@"*****dt = %f",dt);
+                if (dt < kSAVEFILTER)
+                {
+//                    NSLog(@"dt = %ld : RETURN", dt);
+                    return;
+                } else
+                {
+//                    NSLog(@"!!!all good!");
+                }
+                return;
+            }
+
+            
+            
+        }
         
         Sighting *sighting = [NSEntityDescription insertNewObjectForEntityForName:@"Sighting" inManagedObjectContext:self.bgMOC];
         sighting.sighted = sighted;
         sighting.uuid = uuid;
-        sighting.rssi = ([rssi integerValue] ? rssi : lastNonZeroRssi);
+        sighting.rssi = rssi;//([rssi integerValue] ? rssi : lastNonZeroRssi);
         sighting.timestamp = timestamp;
-        lastNonZeroRssi = sighting.rssi;
+        
+        [lastReadingsDictionary removeObjectForKey:sighted];
+        [lastReadingsDictionary setObject:[sighting dictValue] forKey:sighted];
+//        lastNonZeroRssi = sighting.rssi;
         
         NSError *error = nil;
         [self.bgMOC save:&error];

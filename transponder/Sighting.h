@@ -18,5 +18,6 @@
 @property (nonatomic, retain) NSNumber * timestamp;
 
 -(NSString*)JSONRepresentation;
+-(NSDictionary*)dictValue;
 
 @end

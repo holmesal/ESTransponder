@@ -1321,7 +1321,7 @@ static ESTransponder *sharedTransponder;
                                @"rssi": rssi,
                                @"timestamp": [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]
                                };
-    NSLog(@"Adding sighting: %@", sighting);
+//    NSLog(@"Adding sighting: %@", sighting);
     
     NSNumber *timestamp = [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]];
     
