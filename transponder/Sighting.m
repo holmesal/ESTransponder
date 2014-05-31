@@ -13,7 +13,7 @@
 @implementation Sighting
 
 @dynamic sighted;
-@dynamic uuid;
+@dynamic deviceID;
 @dynamic rssi;
 @dynamic timestamp;
 
@@ -21,7 +21,7 @@
 {
     NSLog(@"Timestamp is %@", self.timestamp);
     return @{@"sighted":self.sighted,
-             @"uuid":self.uuid,
+             @"deviceID":self.deviceID,
              @"rssi":self.rssi,
              @"timestamp":self.timestamp};
 }

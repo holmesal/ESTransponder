@@ -13,7 +13,7 @@
 @interface Sighting : NSManagedObject
 
 @property (nonatomic, retain) NSString * sighted;
-@property (nonatomic, retain) NSString * uuid;
+@property (nonatomic, retain) NSString * deviceID;
 @property (nonatomic, retain) NSNumber * rssi;
 @property (nonatomic, retain) NSNumber * timestamp;
 

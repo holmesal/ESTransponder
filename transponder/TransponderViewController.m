@@ -350,8 +350,9 @@ typedef NS_ENUM(NSUInteger, TransponderView)
                  NSLog(@"200!!!!!!");
                  NSDictionary *response = [responseString JSONValue];
                  NSNumber *beaconID = [response objectForKey:@"beaconID"];
-                 NSString *uuid = [response objectForKey:@"uuid"];
-                 [self transitionToPermissionViewWithBeaconID:beaconID andUUID:uuid];
+                 NSString *deviceID = [response objectForKey:@"deviceID"];
+                 NSString *userID = [response objectForKey:@"userID"];
+                 [self transitionToPermissionViewWithBeaconID:beaconID andDeviceID:deviceID andUserID:userID];
              } else
              {
                  [self showAlertIfNotAlready];
@@ -417,7 +418,7 @@ typedef NS_ENUM(NSUInteger, TransponderView)
 //    });
 //}
 
--(void)transitionToPermissionViewWithBeaconID:(NSNumber *)beaconID andUUID:(NSString *)uuid
+-(void)transitionToPermissionViewWithBeaconID:(NSNumber *)beaconID andDeviceID:(NSString *)deviceID andUserID:(NSString *)userID
 {
     
     [self animateFromView:twitterView toView:permissionsView];
@@ -425,10 +426,10 @@ typedef NS_ENUM(NSUInteger, TransponderView)
     
     //save transponder id
     [[NSUserDefaults standardUserDefaults] setObject:beaconID forKey:@"transponder-beaconID"];
-    //save uuid
-    [[NSUserDefaults standardUserDefaults] setObject:uuid forKey:@"transponder-uuid"];
-    
-    id transponderId = [[NSUserDefaults standardUserDefaults] objectForKey:@"transponder-beaconID"];
+    //save deviceid
+    [[NSUserDefaults standardUserDefaults] setObject:deviceID forKey:@"transponder-deviceID"];
+    //save userid
+    [[NSUserDefaults standardUserDefaults] setObject:userID forKey:@"transponder-userID"];
     
     [[NSUserDefaults standardUserDefaults] synchronize];
     

@@ -185,9 +185,9 @@
     //      @"timestamp": [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]
     //      };
 
-        // Grab the uuid from userPrefs
+        // Grab the deviceID from userPrefs
         //get uuid
-        NSString *uuid = [[NSUserDefaults standardUserDefaults] objectForKey:@"transponder-uuid"];
+        NSString *deviceID = [[NSUserDefaults standardUserDefaults] objectForKey:@"transponder-deviceID"];
         
         NSDictionary *last = [lastReadingsDictionary objectForKey:sighted];
         if (last)
@@ -215,7 +215,7 @@
         
         Sighting *sighting = [NSEntityDescription insertNewObjectForEntityForName:@"Sighting" inManagedObjectContext:self.bgMOC];
         sighting.sighted = sighted;
-        sighting.uuid = uuid;
+        sighting.deviceID = deviceID;
         sighting.rssi = rssi;//([rssi integerValue] ? rssi : lastNonZeroRssi);
         sighting.timestamp = timestamp;
         
