@@ -8,7 +8,7 @@
 
 #import "TransponderViewController.h"
 #import <Accounts/Accounts.h>
-#import "TwitterCell.h"
+
 #import "NSObject+SBJson.h"
 #import "ESTransponder.h"
 @interface TransponderViewController () <UIWebViewDelegate>

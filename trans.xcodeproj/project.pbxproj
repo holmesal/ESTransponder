@@ -30,20 +30,13 @@
 		AA8AAA71192F20020037134C /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8AAA63192F20020037134C /* SBJsonTokeniser.m */; };
 		AA8AAA72192F20020037134C /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8AAA65192F20020037134C /* SBJsonUTF8Stream.m */; };
 		AA8AAA73192F20020037134C /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8AAA67192F20020037134C /* SBJsonWriter.m */; };
-		AAD6485A192E757800B18B73 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD64859192E757800B18B73 /* ViewController.m */; };
 		AAD6485E192E83BE00B18B73 /* TransponderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD6485C192E83BE00B18B73 /* TransponderViewController.m */; };
 		AAD6485F192E83BE00B18B73 /* TransponderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD6485C192E83BE00B18B73 /* TransponderViewController.m */; };
 		AAD64860192E83BE00B18B73 /* TransponderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAD6485D192E83BE00B18B73 /* TransponderViewController.xib */; };
 		AAD64861192E83BE00B18B73 /* TransponderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAD6485D192E83BE00B18B73 /* TransponderViewController.xib */; };
 		AAD6486C192EB03700B18B73 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD6486B192EB03700B18B73 /* Accounts.framework */; };
-		AAD6486F192EBD6A00B18B73 /* TwitterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD6486E192EBD6A00B18B73 /* TwitterCell.m */; };
-		AAD64870192EBD6A00B18B73 /* TwitterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD6486E192EBD6A00B18B73 /* TwitterCell.m */; };
-		AAD64872192EBF7D00B18B73 /* TwitterCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAD64871192EBF7D00B18B73 /* TwitterCell.xib */; };
-		AAD64873192EBF7D00B18B73 /* TwitterCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAD64871192EBF7D00B18B73 /* TwitterCell.xib */; };
 		AAD64875192EC9D300B18B73 /* twitter_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = AAD64874192EC9D300B18B73 /* twitter_logo.png */; };
 		AAD64876192EC9D300B18B73 /* twitter_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = AAD64874192EC9D300B18B73 /* twitter_logo.png */; };
-		AAFF3A0A192FEFE0003052C0 /* LHOAuth2LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAFF3A07192FEFDF003052C0 /* LHOAuth2LoginViewController.m */; };
-		AAFF3A0B192FEFE0003052C0 /* NSString+LHURLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = AAFF3A09192FEFE0003052C0 /* NSString+LHURLEncoding.m */; };
 		C02EBAB218ED4CD6004D93F6 /* ESTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C02EBAB118ED4CD6004D93F6 /* ESTableViewController.m */; };
 		C0905EAD18EF617800016522 /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0905EAC18EF617800016522 /* Firebase.framework */; };
 		C0905EAF18EF618D00016522 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C0905EAE18EF618D00016522 /* libicucore.dylib */; };
@@ -122,20 +115,11 @@
 		AA8AAA65192F20020037134C /* SBJsonUTF8Stream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonUTF8Stream.m; sourceTree = "<group>"; };
 		AA8AAA66192F20020037134C /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
 		AA8AAA67192F20020037134C /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
-		AAD64858192E757800B18B73 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		AAD64859192E757800B18B73 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		AAD6485B192E83BE00B18B73 /* TransponderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransponderViewController.h; sourceTree = "<group>"; };
 		AAD6485C192E83BE00B18B73 /* TransponderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransponderViewController.m; sourceTree = "<group>"; };
 		AAD6485D192E83BE00B18B73 /* TransponderViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TransponderViewController.xib; sourceTree = "<group>"; };
 		AAD6486B192EB03700B18B73 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
-		AAD6486D192EBD6A00B18B73 /* TwitterCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterCell.h; sourceTree = "<group>"; };
-		AAD6486E192EBD6A00B18B73 /* TwitterCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitterCell.m; sourceTree = "<group>"; };
-		AAD64871192EBF7D00B18B73 /* TwitterCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TwitterCell.xib; sourceTree = "<group>"; };
 		AAD64874192EC9D300B18B73 /* twitter_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitter_logo.png; sourceTree = "<group>"; };
-		AAFF3A06192FEFDF003052C0 /* LHOAuth2LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LHOAuth2LoginViewController.h; sourceTree = "<group>"; };
-		AAFF3A07192FEFDF003052C0 /* LHOAuth2LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LHOAuth2LoginViewController.m; sourceTree = "<group>"; };
-		AAFF3A08192FEFE0003052C0 /* NSString+LHURLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+LHURLEncoding.h"; sourceTree = "<group>"; };
-		AAFF3A09192FEFE0003052C0 /* NSString+LHURLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+LHURLEncoding.m"; sourceTree = "<group>"; };
 		C004E32B18F35B2400F0E7F9 /* Math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Math.h; sourceTree = "<group>"; };
 		C02EBAB018ED4CD6004D93F6 /* ESTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESTableViewController.h; sourceTree = "<group>"; };
 		C02EBAB118ED4CD6004D93F6 /* ESTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESTableViewController.m; sourceTree = "<group>"; };
@@ -211,10 +195,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AA1EDEEA193A6FDA00682F92 /* transponder source */ = {
+			isa = PBXGroup;
+			children = (
+				C0ACBCF618EB6C8000BBFCDF /* ESTransponder.h */,
+				C0ACBCF718EB6C8000BBFCDF /* ESTransponder.m */,
+				AA8AAA25192F0E620037134C /* post push queue */,
+				C0ACBCF918EB70CC00BBFCDF /* Extension */,
+				AAD64862192E86E500B18B73 /* ui */,
+			);
+			name = "transponder source";
+			sourceTree = "<group>";
+		};
 		AA8AAA25192F0E620037134C /* post push queue */ = {
 			isa = PBXGroup;
 			children = (
-				AAFF3A0C192FEFE3003052C0 /* oauth */,
 				AA8AAA31192F1E300037134C /* json */,
 				AA8AAA26192F0F6E0037134C /* SightingModel.xcdatamodeld */,
 				AA8AAA29192F0FD50037134C /* Sighting.h */,
@@ -261,27 +256,11 @@
 			isa = PBXGroup;
 			children = (
 				AAD64874192EC9D300B18B73 /* twitter_logo.png */,
-				AAD64858192E757800B18B73 /* ViewController.h */,
-				AAD64859192E757800B18B73 /* ViewController.m */,
 				AAD6485B192E83BE00B18B73 /* TransponderViewController.h */,
 				AAD6485C192E83BE00B18B73 /* TransponderViewController.m */,
 				AAD6485D192E83BE00B18B73 /* TransponderViewController.xib */,
-				AAD6486D192EBD6A00B18B73 /* TwitterCell.h */,
-				AAD6486E192EBD6A00B18B73 /* TwitterCell.m */,
-				AAD64871192EBF7D00B18B73 /* TwitterCell.xib */,
 			);
 			name = ui;
-			sourceTree = "<group>";
-		};
-		AAFF3A0C192FEFE3003052C0 /* oauth */ = {
-			isa = PBXGroup;
-			children = (
-				AAFF3A06192FEFDF003052C0 /* LHOAuth2LoginViewController.h */,
-				AAFF3A07192FEFDF003052C0 /* LHOAuth2LoginViewController.m */,
-				AAFF3A08192FEFE0003052C0 /* NSString+LHURLEncoding.h */,
-				AAFF3A09192FEFE0003052C0 /* NSString+LHURLEncoding.m */,
-			);
-			name = oauth;
 			sourceTree = "<group>";
 		};
 		C0ACBCB518EB6C7100BBFCDF = {
@@ -329,13 +308,9 @@
 		C0ACBCC718EB6C7200BBFCDF /* transponder */ = {
 			isa = PBXGroup;
 			children = (
-				AA8AAA25192F0E620037134C /* post push queue */,
-				C0ACBCF918EB70CC00BBFCDF /* Extension */,
-				AAD64862192E86E500B18B73 /* ui */,
+				AA1EDEEA193A6FDA00682F92 /* transponder source */,
 				C0ACBCD018EB6C7200BBFCDF /* ESAppDelegate.h */,
 				C0ACBCD118EB6C7200BBFCDF /* ESAppDelegate.m */,
-				C0ACBCF618EB6C8000BBFCDF /* ESTransponder.h */,
-				C0ACBCF718EB6C8000BBFCDF /* ESTransponder.m */,
 				C0ACBD0718EBAAE900BBFCDF /* ESBeacon.h */,
 				C0ACBD0818EBAAE900BBFCDF /* ESBeacon.m */,
 				C0ACBCD318EB6C7200BBFCDF /* Main.storyboard */,
@@ -493,7 +468,6 @@
 				AA18DCBF19306DAB00F3AAD2 /* close-invert.png in Resources */,
 				AA18DCC71930729800F3AAD2 /* linkedin.png in Resources */,
 				C0ACBCD518EB6C7200BBFCDF /* Main.storyboard in Resources */,
-				AAD64872192EBF7D00B18B73 /* TwitterCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -502,7 +476,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0ACBCEB18EB6C7200BBFCDF /* InfoPlist.strings in Resources */,
-				AAD64873192EBF7D00B18B73 /* TwitterCell.xib in Resources */,
 				AAD64876192EC9D300B18B73 /* twitter_logo.png in Resources */,
 				AAD64861192E83BE00B18B73 /* TransponderViewController.xib in Resources */,
 			);
@@ -548,7 +521,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AAFF3A0B192FEFE0003052C0 /* NSString+LHURLEncoding.m in Sources */,
 				C0ACBD0218EB72BC00BBFCDF /* CBPeripheralManager+Ext.m in Sources */,
 				C0ACBCD818EB6C7200BBFCDF /* ESViewController.m in Sources */,
 				AAD6485E192E83BE00B18B73 /* TransponderViewController.m in Sources */,
@@ -556,13 +528,10 @@
 				C0ACBCFF18EB710C00BBFCDF /* CBUUID+Ext.m in Sources */,
 				AA8AAA72192F20020037134C /* SBJsonUTF8Stream.m in Sources */,
 				C0ACBCFC18EB70E000BBFCDF /* CBCentralManager+Ext.m in Sources */,
-				AAFF3A0A192FEFE0003052C0 /* LHOAuth2LoginViewController.m in Sources */,
 				C02EBAB218ED4CD6004D93F6 /* ESTableViewController.m in Sources */,
 				AA8AAA2E192F10060037134C /* SightingPushQueue.m in Sources */,
-				AAD6485A192E757800B18B73 /* ViewController.m in Sources */,
 				AA8AAA6E192F20020037134C /* SBJsonStreamWriter.m in Sources */,
 				AA8AAA6D192F20020037134C /* SBJsonStreamParserState.m in Sources */,
-				AAD6486F192EBD6A00B18B73 /* TwitterCell.m in Sources */,
 				C0ACBCD218EB6C7200BBFCDF /* ESAppDelegate.m in Sources */,
 				AA8AAA6C192F20020037134C /* SBJsonStreamParserAdapter.m in Sources */,
 				AA8AAA69192F20020037134C /* SBJsonParser.m in Sources */,
@@ -585,7 +554,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0ACBCED18EB6C7200BBFCDF /* transponderTests.m in Sources */,
-				AAD64870192EBD6A00B18B73 /* TwitterCell.m in Sources */,
 				AAD6485F192E83BE00B18B73 /* TransponderViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

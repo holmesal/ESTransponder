@@ -16,7 +16,6 @@
 #import "CBUUID+Ext.h"
 
 #import "TransponderViewController.h"
-#import "Math.h"
 
 #import "SightingPushQueue.h"
 
@@ -662,7 +661,7 @@ static ESTransponder *sharedTransponder;
      CBCentralManagerStatePoweredOff,4
      CBCentralManagerStatePoweredOn,5
      */
-    NSLog(@"central.state = %d", self.centralManager.state);
+//    NSLog(@"central.state = %d", self.centralManager.state);
     
     // Emit the state, if state != unknown
     if (central.state)
@@ -717,7 +716,18 @@ static ESTransponder *sharedTransponder;
     // Convert the userID into a major and minor value to transmit
     NSLog(@"Decomposing UUID %@",userID);
     uint16_t major, minor;
-    esDecomposeIdToMajorMinor([userID intValue], &major, &minor);
+
+    uint32_t identifier = [userID intValue];
+    unsigned char byte4 = (uint)(identifier>>24);
+    unsigned char byte3 = (uint)(identifier>>16);
+    unsigned char byte2 = (uint)(identifier>>8);
+    unsigned char byte1 = (uint)(identifier>>0);
+    
+    
+    major = byte1 + (byte2<<8);
+    minor = byte3 + (byte4<<8);
+    
+//    esDecomposeIdToMajorMinor([userID intValue], &major, &minor);
     NSLog(@"Got major: %hu and minor:%hu",major,minor);
     
     CLBeaconRegion *identityBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IDENTITY_BEACON_UUID]
@@ -757,7 +767,9 @@ static ESTransponder *sharedTransponder;
             if (DEBUG_BEACON) NSLog(@"Available regions count: %lu",(unsigned long)[availableNos count]);
             if ([availableNos count])
             {
-                NSInteger randomChoice = esRandomNumberIn(0, (int)[availableNos count]);
+                int min = 0;
+                int max = (int)[availableNos count];
+                NSInteger randomChoice = min + arc4random() % (max - min); //esRandomNumberIn(0, (int)[availableNos count]);
                 id aNo = [availableNos objectAtIndex:randomChoice];
                 
                 NSUInteger chosenIndex = [availableNos indexOfObject:aNo];
@@ -1116,7 +1128,18 @@ static ESTransponder *sharedTransponder;
         //        NSString *userID = [NSString stringWithFormat:@"%@",beacon.minor];
         
         uint32_t recomposed;
-        esRecomposeMajorMinorToId([beacon.major intValue], [beacon.minor intValue], &recomposed);
+        
+        uint16_t major = [beacon.major intValue];
+        uint16_t minor = [beacon.minor intValue];
+
+        unsigned char byte2 = major>>8;
+        unsigned char byte1 = major>>0;
+        
+        unsigned char byte4 = minor>>8;
+        unsigned char byte3 = minor>>0;
+        
+        recomposed = byte1 + (byte2<<8) + (byte3<<16) + (byte4<<24);
+//        esRecomposeMajorMinorToId([beacon.major intValue], [beacon.minor intValue], &recomposed);
         //        NSLog(@"Recomposed major: %@ and minor:%@   ->   %d",beacon.major,beacon.minor,recomposed);
         
         NSString *userID = [NSString stringWithFormat:@"%u",recomposed];

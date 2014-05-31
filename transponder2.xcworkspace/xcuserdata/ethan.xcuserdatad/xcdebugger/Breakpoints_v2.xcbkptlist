@@ -41,7 +41,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "436"
             endingLineNumber = "436"
-            landmarkName = "-transponderHardwareFailure:"
+            landmarkName = "-transitionToPermissionViewWithBeaconID:andUUID:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -57,7 +57,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "440"
             endingLineNumber = "440"
-            landmarkName = "-transponderHardwareSuccess:"
+            landmarkName = "-transitionToPermissionViewWithBeaconID:andUUID:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
