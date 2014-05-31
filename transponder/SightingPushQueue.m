@@ -11,6 +11,7 @@
 #import "Sighting.h"
 #import "NSObject+SBJson.h"
 
+//#define MTNLAB_POST_URL @"http://192.168.1.90:8080/sighting" //@"http://transponder.mtnlab.io/sighting"
 #define MTNLAB_POST_URL @"http://transponder.mtnlab.io/sighting"
 #define MAXIMUM_POST_CAPACITY 25
 #define MINIMUM_POST_INTERVAL 30.0f
@@ -160,7 +161,8 @@
     return Request;
 }
 
--(void)addObjectToQueue:(NSDictionary*)sightingDictionary
+
+- (void)addSightingWithID:(NSString *)sighted withRSSI:(NSNumber *)rssi andTimestamp:(NSNumber *)timestamp
 {
     [self.bgMOC performBlock:^{
         
@@ -176,15 +178,20 @@
     //    @property (nonatomic, retain) NSNumber * rssi;
     //    @property (nonatomic, retain) NSNumber * timestamp;
         
-        NSString *broadcaster = sightingDictionary[@"broadcaster"];
-        NSString *sighter = sightingDictionary[@"sighter"];
-        NSNumber *rssi = sightingDictionary[@"rssi"];
-        NSNumber *timeStamp = sightingDictionary[@"timestamp"];
+        // Grab the uuid from userPrefs
+        //get uuid
+        NSString *uuid = [[NSUserDefaults standardUserDefaults] objectForKey:@"transponder-uuid"];
+        
+//        NSString *broadcaster = sightingDictionary[@"broadcaster"];
+//        NSString *sighter = sightingDictionary[@"sighter"];
+//        NSNumber *rssi = sightingDictionary[@"rssi"];
+//        NSNumber *timeStamp = sightingDictionary[@"timestamp"];
         
         Sighting *sighting = [NSEntityDescription insertNewObjectForEntityForName:@"Sighting" inManagedObjectContext:self.bgMOC];
-        sighting.broadcaster = broadcaster;
-        sighting.sighter = sighter;
+        sighting.sighted = sighted;
+        sighting.uuid = uuid;
         sighting.rssi = ([rssi integerValue] ? rssi : lastNonZeroRssi);
+        sighting.timestamp = timestamp;
         lastNonZeroRssi = sighting.rssi;
         
         NSError *error = nil;
@@ -196,6 +203,9 @@
         }
         
         [self debugPrintAllSightings];
+        
+        [self post];
+        
     }];
 }
 

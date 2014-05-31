@@ -304,6 +304,7 @@ typedef NS_ENUM(NSUInteger, TransponderView)
      &client_secret=YOUR_SECRET_KEY
      */
     NSString *requestString = [NSString stringWithFormat:@"http://transponder.mtnlab.io/user"];
+//    NSString *requestString = [NSString stringWithFormat:@"http://192.168.1.90:8080/user"];
     
     NSURL *url = [NSURL URLWithString:requestString];
     
@@ -317,11 +318,11 @@ typedef NS_ENUM(NSUInteger, TransponderView)
     NSString *postString = [dict JSONRepresentation];
     [request setHTTPBody:[postString dataUsingEncoding:NSASCIIStringEncoding]];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul), ^{
-    
-        dispatch_sync(dispatch_get_main_queue(), ^    {});
-        
-    });
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul), ^{
+//    
+//        dispatch_sync(dispatch_get_main_queue(), ^    {});
+//        
+//    });
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue,
@@ -348,8 +349,9 @@ typedef NS_ENUM(NSUInteger, TransponderView)
              {
                  NSLog(@"200!!!!!!");
                  NSDictionary *response = [responseString JSONValue];
-                 NSString *beaconID = [response objectForKey:@"beaconID"];
-                 [self transitionToPermissionViewWithBeaconID:beaconID];
+                 NSNumber *beaconID = [response objectForKey:@"beaconID"];
+                 NSString *uuid = [response objectForKey:@"uuid"];
+                 [self transitionToPermissionViewWithBeaconID:beaconID andUUID:uuid];
              } else
              {
                  [self showAlertIfNotAlready];
@@ -415,14 +417,21 @@ typedef NS_ENUM(NSUInteger, TransponderView)
 //    });
 //}
 
--(void)transitionToPermissionViewWithBeaconID:(NSString*)beaconID
+-(void)transitionToPermissionViewWithBeaconID:(NSNumber *)beaconID andUUID:(NSString *)uuid
 {
     
     [self animateFromView:twitterView toView:permissionsView];
 
     
     //save transponder id
-    [[NSUserDefaults standardUserDefaults] setObject:beaconID forKey:@"transponderID"];
+    [[NSUserDefaults standardUserDefaults] setObject:beaconID forKey:@"transponder-beaconID"];
+    //save uuid
+    [[NSUserDefaults standardUserDefaults] setObject:uuid forKey:@"transponder-uuid"];
+    
+    id transponderId = [[NSUserDefaults standardUserDefaults] objectForKey:@"transponder-beaconID"];
+    
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
 
 
     [[ESTransponder sharedInstance] startTransponder];

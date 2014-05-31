@@ -22,7 +22,7 @@
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL YES
-#define DEBUG_BEACON NO
+#define DEBUG_BEACON YES
 #define DEBUG_USERS NO
 #define DEBUG_TIMEOUTS NO
 #define DEBUG_NOTIFICATIONS NO
@@ -118,7 +118,7 @@ static ESTransponder *sharedTransponder;
 
 +(BOOL)HasBeaconID
 {
-    id transponderId = [[NSUserDefaults standardUserDefaults] objectForKey:@"transponderID"];
+    id transponderId = [[NSUserDefaults standardUserDefaults] objectForKey:@"transponder-beaconID"];
     return (transponderId) ? YES : NO;
 }
 +(BOOL)HardwareIsSupportedOnDevice
@@ -228,7 +228,7 @@ static ESTransponder *sharedTransponder;
 {
     // Check NSUserDefaults for a saved ID
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSString *existingID = [prefs valueForKey:@"transponderID"];
+    NSString *existingID = [prefs valueForKey:@"transponder-beaconID"];
     
     if (existingID){
         // Return the id
@@ -1317,15 +1317,16 @@ static ESTransponder *sharedTransponder;
 - (void)sightedBroadcaster:(NSString *)broadcasterID withRSSI:(NSNumber *)rssi
 {
     // Build the sighting object and add the timestamp
-    NSDictionary *sighting = @{@"broadcaster": broadcasterID,
-                               @"sighter": self.transponderID,
+    NSDictionary *sighting = @{@"sighted": broadcasterID,
                                @"rssi": rssi,
                                @"timestamp": [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]
                                };
     NSLog(@"Adding sighting: %@", sighting);
     
+    NSNumber *timestamp = [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]];
+    
     //added to disk-stored push/post queue
-    [sightingPushQueue addObjectToQueue:sighting];
+    [sightingPushQueue addSightingWithID:broadcasterID withRSSI:rssi andTimestamp:timestamp];
 }
 
 -(void)dealloc

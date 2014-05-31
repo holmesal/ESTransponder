@@ -12,8 +12,8 @@
 
 @interface Sighting : NSManagedObject
 
-@property (nonatomic, retain) NSString * broadcaster;
-@property (nonatomic, retain) NSString * sighter;
+@property (nonatomic, retain) NSString * sighted;
+@property (nonatomic, retain) NSString * uuid;
 @property (nonatomic, retain) NSNumber * rssi;
 @property (nonatomic, retain) NSNumber * timestamp;
 

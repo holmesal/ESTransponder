@@ -10,7 +10,7 @@
 
 @interface SightingPushQueue : NSObject
 
--(void)addObjectToQueue:(NSDictionary*)sightingDictionary;
+- (void)addSightingWithID:(NSString *)sighted withRSSI:(NSNumber *)rssi andTimestamp:(NSNumber *)timestamp;
 
 //returns yes if it is ~time to post, no if we still have some time to wait;
 -(BOOL)throttledPost;

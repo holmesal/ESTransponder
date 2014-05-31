@@ -12,15 +12,16 @@
 
 @implementation Sighting
 
-@dynamic broadcaster;
-@dynamic sighter;
+@dynamic sighted;
+@dynamic uuid;
 @dynamic rssi;
 @dynamic timestamp;
 
 -(NSDictionary*)dictValue
 {
-    return @{@"broadcaster":self.broadcaster,
-             @"sighter":self.sighter,
+    NSLog(@"Timestamp is %@", self.timestamp);
+    return @{@"sighted":self.sighted,
+             @"uuid":self.uuid,
              @"rssi":self.rssi,
              @"timestamp":self.timestamp};
 }
